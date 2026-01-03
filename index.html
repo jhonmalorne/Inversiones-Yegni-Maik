@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inversiones Yegni Maik - Bodega Carabobo | Ofertas ??</title>
-    <meta name="description" content="Bodega Inversiones Yegni Maik en Naguanagua, Carabobo. Ofertas calientes: arroz, aceite, café a mitad de precio. Pago móvil QR. Abierto 8am-9pm todos los días. ¡Pide por WhatsApp!">
+    <title>Inversiones Yegni Maik - Bodega Carabobo | Ofertas ðŸ”¥</title>
+    <meta name="description" content="Bodega Inversiones Yegni Maik en Naguanagua, Carabobo. Ofertas calientes: arroz, aceite, cafÃ© a mitad de precio. Pago mÃ³vil QR. Abierto 8am-9pm todos los dÃ­as. Pide por WhatsApp!">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --naranja: #FF6B35;
@@ -13,157 +15,484 @@
             --crema: #FFF8E7;
             --gris: #2C3E50;
             --glass: rgba(255,255,255,0.1);
-            --glass-bg: rgba(255,255,255,0.9);
+            --glass-bg: rgba(255,255,255,0.95);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, var(--crema), #FFE5B4); color: var(--gris); overflow-x: hidden; }
-        header { background: linear-gradient(90deg, var(--naranja), var(--dorado)); padding: 1rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
-        nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 2rem; flex-wrap: wrap; }
-        .logo { font-size: 2rem; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .bcv-rate { background: var(--glass); backdrop-filter: blur(10px); padding: 0.5rem 1rem; border-radius: 20px; color: white; font-weight: bold; font-size: 1.1rem; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .whatsapp-float { position: fixed; bottom: 20px; right: 20px; background: var(--verde); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 8px 30px rgba(50,215,75,0.4); cursor: pointer; z-index: 1000; transition: all 0.3s; }
-        .whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 12px 40px rgba(50,215,75,0.6); }
-        section { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
-        h1, h2 { text-align: center; margin-bottom: 2rem; color: var(--gris); }
-        h1 { font-size: 3rem; background: linear-gradient(45deg, var(--naranja), var(--dorado)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: glow 2s ease-in-out infinite alternate; }
-        @keyframes glow { from { text-shadow: 0 0 20px var(--naranja); } to { text-shadow: 0 0 30px var(--dorado); } }
-        .abierto { text-align: center; background: var(--verde); color: white; padding: 1rem; border-radius: 50px; font-size: 1.5rem; font-weight: bold; margin: 2rem auto; display: block; max-width: 300px; box-shadow: 0 10px 30px rgba(50,215,75,0.4); animation: bounce 1s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .map-container { position: relative; height: 400px; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.2); margin: 2rem 0; }
-        .map-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        .ofertas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-        .oferta { background: var(--glass-bg); backdrop-filter: blur(20px); border-radius: 20px; padding: 2rem; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.1); transition: all 0.3s; border: 1px solid var(--glass); }
-        .oferta:hover { transform: translateY(-20px); box-shadow: 0 30px 60px rgba(255,107,53,0.3); }
-        .oferta svg { width: 100px; height: 100px; fill: var(--naranja); margin-bottom: 1rem; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2)); }
-        .precio-mitad { font-size: 2rem; color: var(--verde); font-weight: bold; }
-        .qr-pago { text-align: center; margin: 2rem 0; }
-        .qr-pago img { width: 200px; height: 200px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .opiniones { background: linear-gradient(135deg, var(--crema), white); border-radius: 20px; padding: 2rem; }
-        .opiniones-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
-        .opinion { background: white; padding: 1.5rem; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .form-opinion { background: var(--glass-bg); padding: 2rem; border-radius: 20px; margin-top: 2rem; }
-        .form-opinion input, .form-opinion textarea { width: 100%; padding: 1rem; margin-bottom: 1rem; border: 2px solid var(--glass); border-radius: 10px; font-size: 1rem; }
-        .btn { background: linear-gradient(45deg, var(--naranja), var(--dorado)); color: white; padding: 1rem 2rem; border: none; border-radius: 50px; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 30px rgba(255,107,53,0.4); display: block; margin: 1rem auto; }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255,107,53,0.6); }
-        .horario { background: var(--glass-bg); backdrop-filter: blur(10px); padding: 2rem; border-radius: 20px; text-align: center; }
-        @media (max-width: 768px) { .bcv-rate { font-size: 1rem; } h1 { font-size: 2rem; } section { padding: 2rem 1rem; } }
+        body { 
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: linear-gradient(135deg, var(--crema), #FFE5B4); 
+            color: var(--gris); 
+            overflow-x: hidden; 
+            line-height: 1.6;
+        }
+        header { 
+            background: linear-gradient(90deg, var(--naranja), var(--dorado)); 
+            padding: 1rem 0; 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2); 
+        }
+        nav { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 2rem; 
+            flex-wrap: wrap; 
+        }
+        .logo { 
+            font-size: 2rem; 
+            font-weight: 700; 
+            color: white; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3); 
+        }
+        .bcv-rate { 
+            background: var(--glass); 
+            backdrop-filter: blur(10px); 
+            padding: 0.5rem 1rem; 
+            border-radius: 20px; 
+            color: white; 
+            font-weight: 600; 
+            font-size: 1.1rem; 
+            animation: pulse 2s infinite; 
+        }
+        @keyframes pulse { 
+            0%, 100% { transform: scale(1); } 
+            50% { transform: scale(1.05); } 
+        }
+        .whatsapp-float { 
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            background: linear-gradient(45deg, #25D366, var(--verde)) !important; 
+            color: white !important; 
+            width: 60px; 
+            height: 60px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.8rem !important; 
+            box-shadow: 0 8px 30px rgba(50,215,75,0.4); 
+            cursor: pointer; 
+            z-index: 1000; 
+            transition: all 0.3s; 
+            text-decoration: none !important;
+        }
+        .whatsapp-float:hover { 
+            transform: scale(1.1); 
+            box-shadow: 0 12px 40px rgba(50,215,75,0.6); 
+        }
+        section { 
+            padding: 4rem 2rem; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        h1, h2 { 
+            text-align: center; 
+            margin-bottom: 2rem; 
+            color: var(--gris); 
+        }
+        h1 { 
+            font-size: 3rem; 
+            background: linear-gradient(45deg, var(--naranja), var(--dorado)); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            background-clip: text;
+            animation: glow 2s ease-in-out infinite alternate; 
+            font-weight: 700;
+        }
+        @keyframes glow { 
+            from { filter: drop-shadow(0 0 10px var(--naranja)); } 
+            to { filter: drop-shadow(0 0 20px var(--dorado)); } 
+        }
+        .abierto { 
+            text-align: center; 
+            background: linear-gradient(45deg, var(--verde), #28A745); 
+            color: white; 
+            padding: 1.2rem; 
+            border-radius: 50px; 
+            font-size: 1.5rem; 
+            font-weight: 600; 
+            margin: 2rem auto; 
+            display: block; 
+            max-width: 350px; 
+            box-shadow: 0 10px 30px rgba(50,215,75,0.4); 
+            animation: bounce 1s infinite; 
+        }
+        @keyframes bounce { 
+            0%, 100% { transform: translateY(0); } 
+            50% { transform: translateY(-10px); } 
+        }
+        .map-container { 
+            position: relative; 
+            height: 400px; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2); 
+            margin: 2rem 0; 
+        }
+        .map-container iframe { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            border: 0; 
+        }
+        .ofertas-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 2rem; 
+        }
+        .oferta { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(20px); 
+            border-radius: 25px; 
+            padding: 2.5rem 2rem; 
+            text-align: center; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            border: 1px solid rgba(255,255,255,0.2); 
+            position: relative;
+            overflow: hidden;
+        }
+        .oferta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        .oferta:hover::before { left: 100%; }
+        .oferta:hover { 
+            transform: translateY(-25px) scale(1.02); 
+            box-shadow: 0 35px 70px rgba(255,107,53,0.3); 
+        }
+        .oferta img { 
+            width: 140px; 
+            height: 140px; 
+            object-fit: cover; 
+            border-radius: 20px; 
+            margin-bottom: 1.5rem; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2); 
+            transition: all 0.3s;
+        }
+        .oferta:hover img { transform: scale(1.1); }
+        .precio-mitad { 
+            font-size: 2.2rem; 
+            background: linear-gradient(45deg, var(--verde), #28A745); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            background-clip: text;
+            font-weight: 700; 
+            margin: 1rem 0;
+        }
+        .qr-pago { 
+            text-align: center; 
+            margin: 3rem 0; 
+        }
+        .qr-pago img { 
+            width: 220px; 
+            height: 220px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2); 
+            margin-bottom: 1rem;
+        }
+        .opiniones { 
+            background: linear-gradient(135deg, var(--crema), white); 
+            border-radius: 25px; 
+            padding: 3rem; 
+            margin: 2rem 0;
+        }
+        .opiniones-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 1.5rem; 
+        }
+        .opinion { 
+            background: white; 
+            padding: 2rem; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); 
+            border-left: 5px solid var(--verde);
+        }
+        .form-opinion { 
+            background: var(--glass-bg); 
+            padding: 2.5rem; 
+            border-radius: 25px; 
+            margin-top: 3rem; 
+        }
+        .form-opinion input, 
+        .form-opinion textarea { 
+            width: 100%; 
+            padding: 1.2rem; 
+            margin-bottom: 1.5rem; 
+            border: 2px solid var(--glass); 
+            border-radius: 15px; 
+            font-size: 1rem; 
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+        }
+        .form-opinion input:focus, 
+        .form-opinion textarea:focus {
+            outline: none;
+            border-color: var(--naranja);
+            box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+        }
+        .btn { 
+            background: linear-gradient(45deg, var(--naranja), var(--dorado)); 
+            color: white; 
+            padding: 1.2rem 3rem; 
+            border: none; 
+            border-radius: 50px; 
+            font-size: 1.1rem; 
+            font-weight: 600;
+            cursor: pointer; 
+            transition: all 0.3s; 
+            box-shadow: 0 10px 30px rgba(255,107,53,0.4); 
+            display: block; 
+            margin: 1.5rem auto; 
+            font-family: 'Poppins', sans-serif;
+        }
+        .btn:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 20px 50px rgba(255,107,53,0.6); 
+        }
+        .horario { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(10px); 
+            padding: 3rem; 
+            border-radius: 25px; 
+            text-align: center; 
+            margin: 2rem 0;
+        }
+        .btn-whatsapp {
+            display: inline-block;
+            background: linear-gradient(45deg, #25D366, var(--verde));
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 1rem;
+            box-shadow: 0 10px 30px rgba(37,211,102,0.4);
+            transition: all 0.3s;
+        }
+        .btn-whatsapp:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(37,211,102,0.6);
+        }
+        @media (max-width: 768px) { 
+            .bcv-rate { font-size: 1rem; } 
+            h1 { font-size: 2.2rem; } 
+            section { padding: 2rem 1rem; } 
+            .ofertas-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
     <header>
         <nav>
-            <div class="logo">?? Inversiones Yegni Maik</div>
-            <div id="bcv-rate" class="bcv-rate">USD: Bs. <span id="tasa">304,6796</span> [BCV]</div>
+            <div class="logo">
+                <i class="fas fa-shopping-cart"></i> Inversiones Yegni Maik
+            </div>
+            <div id="bcv-rate" class="bcv-rate">
+                <i class="fas fa-dollar-sign"></i> USD: Bs. <span id="tasa">304,6796</span> <small>[BCV]</small>
+            </div>
         </nav>
     </header>
 
     <main>
         <section>
-            <h1>¡Bienvenidos a tu Bodega Favorita! ??</h1>
-            <div class="abierto">?? ABIERTO - Todos los días 8AM a 9PM</div>
+            <h1>Bienvenidos a tu Bodega Favorita!</h1>
+            <div class="abierto">
+                <i class="fas fa-circle"></i> ABIERTO - Todos los dias 8AM a 9PM
+            </div>
         </section>
 
         <section id="mapa">
-            <h2>?? Nuestra Ubicación</h2>
+            <h2><i class="fas fa-map-marker-alt"></i> Nuestra Ubicacion</h2>
             <div class="map-container">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3928.123456789!2d-67.123456789!3d10.123456789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTAwMDEmIzM5O3N0cmVldHM%3D!5e0!3m2!1ses!2sve!4v1735678901234!5m2!1ses!2sve" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </section>
 
         <section id="ofertas">
-            <h2>?? OFERTAS CALIENTES - ¡Hasta Agotar Stock!</h2>
+            <h2><i class="fas fa-fire"></i> OFERTAS CALIENTES - Hasta Agotar Stock!</h2>
             <div class="ofertas-grid">
                 <div class="oferta">
-                    <svg viewBox="0 0 100 100"><path d="M20 20 L80 20 L80 80 L20 80 Z" fill="#FF6B35"/><circle cx="50" cy="50" r="5" fill="white"/><text x="50" y="55" text-anchor="middle" fill="white" font-size="12">Arroz</text></svg>
+                    <img src="https://images.unsplash.com/photo-1603048297194-9bef1f07ca2e?w=300&h=300&fit=crop&crop=center" alt="Arroz" loading="lazy">
                     <h3>Arroz Cualquier Marca</h3>
-                    <div class="precio-mitad">¡A MITAD de Precio!</div>
-                    <p>¡No te lo pierdas!</p>
+                    <div class="precio-mitad">A MITAD de Precio!</div>
+                    <p>Calidad garantizada - Stock limitado</p>
+                    <a href="https://wa.me/584244525765?text=Hola! Quiero el arroz en oferta" class="btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Pedir Ahora
+                    </a>
                 </div>
                 <div class="oferta">
-                    <svg viewBox="0 0 100 100"><ellipse cx="50" cy="40" rx="25" ry="15" fill="#FFD23F"/><rect x="35" y="55" width="30" height="25" rx="5" fill="#32D74B"/><text x="50" y="75" text-anchor="middle" fill="white" font-size="10">Aceite</text></svg>
-                    <h3>Aceite</h3>
-                    <div class="precio-mitad">¡A MITAD de Precio!</div>
-                    <p>Calidad premium</p>
+                    <img src="https://images.unsplash.com/photo-1588166524941-28c506051621?w=300&h=300&fit=crop&crop=center" alt="Aceite" loading="lazy">
+                    <h3>Aceite Vegetal</h3>
+                    <div class="precio-mitad">A MITAD de Precio!</div>
+                    <p>Presentaciones economicas</p>
+                    <a href="https://wa.me/584244525765?text=Hola! Quiero el aceite en oferta" class="btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Pedir Ahora
+                    </a>
                 </div>
                 <div class="oferta">
-                    <svg viewBox="0 0 100 100"><path d="M30 30 Q50 20 70 30 L70 70 Q50 80 30 70 Z" fill="#8B4513"/><circle cx="50" cy="45" r="15" fill="#654321"/><text x="50" y="52" text-anchor="middle" fill="white" font-size="12">Café</text></svg>
-                    <h3>Café</h3>
-                    <div class="precio-mitad">¡A MITAD de Precio!</div>
-                    <p>Aroma irresistible</p>
+                    <img src="https://images.unsplash.com/photo-1542994983-9de84eece686?w=300&h=300&fit=crop&crop=center" alt="Cafe" loading="lazy">
+                    <h3>Cafe Premium</h3>
+                    <div class="precio-mitad">A MITAD de Precio!</div>
+                    <p>Aroma y sabor inigualables</p>
+                    <a href="https://wa.me/584244525765?text=Hola! Quiero el cafe en oferta" class="btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Pedir Ahora
+                    </a>
                 </div>
             </div>
         </section>
 
         <section id="pago">
-            <h2>?? Pago Móvil Fácil</h2>
+            <h2><i class="fas fa-mobile-alt"></i> Pago Movil Facil</h2>
             <div class="qr-pago">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=04244525765%0A16897477%0AMercantil%0AInversiones%20Yegni%20Maik" alt="QR Pago Móvil">
-                <p>Cel: 0424-4525765 | Céd: 16897477 | Banco Mercantil</p>
-                <button class="btn" onclick="window.open('https://wa.me/584244525765?text=¡Hola!%20Quiero%20hacer%20un%20pedido%20de%20la%20bodega')">Pedir por WhatsApp</button>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=04244525765%0ACedula:%2016897477%0ABanco:%20Mercantil%0AInversiones%20Yegni%20Maik&color=FF6B35&bgcolor=FFFFFF" alt="QR Pago Movil">
+                <p><strong>Celular:</strong> 0424-4525765<br>
+                   <strong>Cedula:</strong> 16897477<br>
+                   <strong>Banco:</strong> Mercantil</p>
+                <a href="https://wa.me/584244525765?text=Hola! Quiero hacer un pago movil" class="btn btn-whatsapp">
+                    Confirmar Pago
+                </a>
             </div>
         </section>
 
         <section id="horario" class="horario">
-            <h2>?? Horario</h2>
-            <p><strong>Todos los días:</strong> 8:00 AM - 9:00 PM</p>
-            <p>Lunes a Domingo - ¡Siempre Abierto para ti!</p>
+            <h2><i class="fas fa-clock"></i> Horario de Atencion</h2>
+            <p><strong>Todos los dias:</strong> 8:00 AM - 9:00 PM</p>
+            <p><i class="fas fa-calendar-check"></i> Lunes a Domingo - Sin descansos</p>
         </section>
 
         <section id="opiniones" class="opiniones">
-            <h2>? Opiniones de Nuestros Clientes</h2>
+            <h2><i class="fas fa-star"></i> Opiniones de Nuestros Clientes</h2>
             <div class="opiniones-grid">
-                <div class="opinion">¡Excelente bodega! Precios bajos y atención rápida. Recomiendo 100% ????? - María G.</div>
-                <div class="opinion">Las ofertas son increíbles, arroz y café siempre frescos. ¡Vuelvo siempre! ????? - José R.</div>
-                <div class="opinion">Pago fácil con QR y entregas puntuales. La mejor de Naguanagua ????? - Ana L.</div>
-                <div class="opinion">Horario extendido perfecto para mi trabajo. ¡Gracias Yegni Maik! ????? - Pedro M.</div>
+                <div class="opinion">
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <p>"Excelente bodega! Precios bajos y atencion rapida. Recomiendo 100%"</p>
+                    <strong>- Maria G., Naguanagua</strong>
+                </div>
+                <div class="opinion">
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <p>"Las ofertas son increibles, arroz y cafe siempre frescos!"</p>
+                    <strong>- Jose R., Cliente frecuente</strong>
+                </div>
+                <div class="opinion">
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <p>"Pago facil con QR y entregas puntuales. La mejor!"</p>
+                    <strong>- Ana L., Vecina</strong>
+                </div>
+                <div class="opinion">
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <i class="fas fa-star" style="color: #FFD23F;"></i>
+                    <p>"Horario extendido perfecto para mi trabajo"</p>
+                    <strong>- Pedro M., Trabajador</strong>
+                </div>
             </div>
             <div class="form-opinion">
-                <h3>Deja tu Opinión</h3>
-                <input type="text" id="nombre" placeholder="Tu Nombre">
-                <textarea id="opinion" placeholder="Tu comentario..."></textarea>
-                <button class="btn" onclick="enviarOpinion()">Enviar a WhatsApp</button>
+                <h3><i class="fas fa-comment"></i> Deja tu Opinion</h3>
+                <input type="text" id="nombre" placeholder="Tu nombre">
+                <textarea id="opinion" placeholder="Comparte tu experiencia..." rows="4"></textarea>
+                <button class="btn" onclick="enviarOpinion()">
+                    <i class="fab fa-whatsapp"></i> Enviar a WhatsApp
+                </button>
             </div>
         </section>
     </main>
 
-    <a href="https://wa.me/584244525765?text=¡Hola!%20Vi%20tu%20web%20Yegni%20Maik%20y%20quiero%20pedir%20ofertas%20??" class="whatsapp-float" target="_blank">??</a>
+    <a href="https://wa.me/584244525765?text=Hola! Vi tu web Yegni Maik y quiero pedir ofertas" class="whatsapp-float" target="_blank" title="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
     <script>
-        // API BCV Real
+        // API BCV Real (con fallback)
         async function fetchBCV() {
             try {
                 const res = await fetch('https://api.bcv.org.ve/dolar?format=json');
                 const data = await res.json();
-                document.getElementById('tasa').textContent = parseFloat(data.USD ?? 304.6796).toLocaleString('es-VE', {minimumFractionDigits: 4});
-            } catch {
-                // Fallback del sitio oficial
+                document.getElementById('tasa').textContent = parseFloat(data.USD ?? 304.6796).toLocaleString('es-VE', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 4
+                });
+            } catch (e) {
                 document.getElementById('tasa').textContent = '304,6796';
             }
         }
+        
+        // Cargar tasa al inicio y cada 5 minutos
         fetchBCV();
-        setInterval(fetchBCV, 300000); // 5 min
+        setInterval(fetchBCV, 300000);
 
-        // Smooth scroll
+        // Smooth scroll para navegacion
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', e => {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                document.querySelector(anchor.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
             });
         });
 
-        // Enviar opinión a WA
+        // Enviar opinion a WhatsApp
         function enviarOpinion() {
-            const nombre = document.getElementById('nombre').value || 'Anónimo';
+            const nombre = document.getElementById('nombre').value || 'Anonimo';
             const opinion = document.getElementById('opinion').value || '';
-            const texto = `Nueva opinión de ${nombre}: ${opinion}`;
-            window.open(`https://wa.me/584244525765?text=${encodeURIComponent(texto)}`);
+            const texto = `Nueva opinion de ${nombre}:\n\n${opinion}\n\nâ­ Â¿Publicamos en la web?`;
+            window.open(`https://wa.me/584244525765?text=${encodeURIComponent(texto)}`, '_blank');
         }
 
-        // Navbar scroll
+        // Efecto header al hacer scroll
         window.addEventListener('scroll', () => {
-            document.querySelector('header').style.background = window.scrollY > 100 ? 'rgba(255,107,53,0.95)' : 'linear-gradient(90deg, var(--naranja), var(--dorado))';
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255,107,53,0.95)';
+            } else {
+                header.style.background = 'linear-gradient(90deg, var(--naranja), var(--dorado))';
+            }
         });
+
+        // Lazy load para imagenes
+        if ('IntersectionObserver' in window) {
+            const images = document.querySelectorAll('img[loading="lazy"]');
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src || img.src;
+                        img.classList.remove('lazy');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+            images.forEach(img => imageObserver.observe(img));
+        }
     </script>
 </body>
 </html>
