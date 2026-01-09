@@ -1,243 +1,768 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inversiones Yegni Maik - Bodega Carabobo | Ofertas 🔥</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --naranja: #FF6B35;
-            --dorado: #FFD23F;
-            --verde: #32D74B;
-            --crema: #FFF8E7;
-            --gris: #2C3E50;
-            --glass: rgba(255,255,255,0.1);
-            --glass-bg: rgba(255,255,255,0.95);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            background: linear-gradient(135deg, var(--crema), #FFE5B4); 
-            color: var(--gris); 
-            overflow-x: hidden; 
-        }
-        header { 
-            background: linear-gradient(90deg, var(--naranja), var(--dorado)); 
-            padding: 1rem 0; position: sticky; top: 0; z-index: 100; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2); 
-        }
-        nav { display: flex; justify-content: space-between; align-items: center; 
-              max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-        .logo { font-size: 2rem; font-weight: 700; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .bcv-rate { background: var(--glass); backdrop-filter: blur(10px); padding: 0.5rem 1rem; 
-                    border-radius: 20px; color: white; font-weight: 600; font-size: 1.1rem; 
-                    animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .whatsapp-float { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(45deg, #25D366, var(--verde)); 
-                          color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; 
-                          justify-content: center; font-size: 1.8rem; box-shadow: 0 8px 30px rgba(50,215,75,0.4); 
-                          cursor: pointer; z-index: 1000; transition: all 0.3s; text-decoration: none; }
-        .whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 12px 40px rgba(50,215,75,0.6); }
-        section { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
-        h1, h2 { text-align: center; margin-bottom: 2rem; color: var(--gris); }
-        h1 { font-size: 3rem; background: linear-gradient(45deg, var(--naranja), var(--dorado)); 
-              -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: glow 2s infinite alternate; }
-        @keyframes glow { from { filter: drop-shadow(0 0 10px var(--naranja)); } to { filter: drop-shadow(0 0 20px var(--dorado)); } }
-        .abierto { text-align: center; background: linear-gradient(45deg, var(--verde), #28A745); color: white; padding: 1.2rem; 
-                   border-radius: 50px; font-size: 1.5rem; font-weight: 600; margin: 2rem auto; display: block; 
-                   max-width: 350px; box-shadow: 0 10px 30px rgba(50,215,75,0.4); animation: bounce 1s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .map-container { position: relative; height: 400px; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.2); margin: 2rem 0; }
-        .map-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        .ofertas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
-        .oferta { background: var(--glass-bg); backdrop-filter: blur(20px); border-radius: 25px; padding: 2.5rem 2rem; 
-                  text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.1); transition: all 0.4s; border: 1px solid rgba(255,255,255,0.2); }
-        .oferta:hover { transform: translateY(-25px) scale(1.02); box-shadow: 0 35px 70px rgba(255,107,53,0.3); }
-        .oferta svg { width: 140px; height: 140px; margin-bottom: 1.5rem; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)); }
-        .oferta-placeholder { font-size: 3rem; color: var(--naranja); margin-bottom: 1rem; }
-        .precio-mitad { font-size: 2.2rem; background: linear-gradient(45deg, var(--verde), #28A745); 
-                        -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; margin: 1rem 0; }
-        .qr-pago { text-align: 20px; margin: 3rem 0; }
-        .qr-pago img { width: 220px; height: 220px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); margin-bottom: 1rem; }
-        .opiniones { background: linear-gradient(135deg, var(--crema), white); border-radius: 25px; padding: 3rem; margin: 2rem 0; }
-        .opiniones-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-        .opinion { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-left: 5px solid var(--verde); }
-        .form-opinion { background: var(--glass-bg); padding: 2.5rem; border-radius: 25px; margin-top: 3rem; }
-        .form-opinion input, .form-opinion textarea { width: 100%; padding: 1.2rem; margin-bottom: 1.5rem; border: 2px solid var(--glass); border-radius: 15px; transition: all 0.3s; }
-        .form-opinion input:focus, .form-opinion textarea:focus { outline: none; border-color: var(--naranja); }
-        .btn, .btn-whatsapp { background: linear-gradient(45deg, var(--naranja), var(--dorado)); color: white; padding: 1rem 2rem; border: none; 
-                              border-radius: 50px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; 
-                              box-shadow: 0 10px 30px rgba(255,107,53,0.4); display: inline-block; margin: 1rem; text-decoration: none; }
-        .btn-whatsapp { background: linear-gradient(45deg, #25D366, var(--verde)); }
-        .btn:hover, .btn-whatsapp:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(255,107,53,0.6); }
-        .btn-whatsapp:hover { box-shadow: 0 20px 50px rgba(37,211,102,0.6); }
-        .horario { background: var(--glass-bg); backdrop-filter: blur(10px); padding: 3rem; border-radius: 25px; text-align: center; margin: 2rem 0; }
-        @media (max-width: 768px) { .bcv-rate { font-size: 1rem; } h1 { font-size: 2.2rem; } section { padding: 2rem 1rem; } .ofertas-grid { grid-template-columns: 1fr; } }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventario - Inversiones Yegni-Maik</title>
+
+  <!-- Estilos internos -->
+  <style>
+    :root {
+      --azul: #0056a8;
+      --azul-oscuro: #003b73;
+      --naranja: #f26c21;
+      --rojo: #e32026;
+      --amarillo: #f7b500;
+      --gris-claro: #f5f5f5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    body {
+      background: #ffffff;
+      color: #333;
+      padding: 10px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    header img {
+      height: 60px;
+    }
+
+    header .title-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    header h1 {
+      font-size: 18px;
+      color: var(--azul-oscuro);
+    }
+
+    header span {
+      font-size: 11px;
+      color: #666;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    .card h2 {
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: var(--azul-oscuro);
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--azul);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 8px;
+      text-align: center;
+      font-size: 13px;
+      cursor: pointer;
+      border: none;
+      background: #ffffff;
+      color: var(--azul-oscuro);
+    }
+
+    .tab-btn.active {
+      background: var(--azul);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .tab-btn.egreso.active {
+      background: var(--naranja);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .form-grid.full {
+      grid-template-columns: 1fr;
+    }
+
+    label {
+      font-size: 11px;
+      color: #555;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 7px;
+      font-size: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--azul);
+      box-shadow: 0 0 0 1px rgba(0, 86, 168, 0.1);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 6px;
+      color: #ffffff;
+    }
+
+    .btn-ingreso {
+      background: var(--azul);
+    }
+
+    .btn-egreso {
+      background: var(--naranja);
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 10px;
+      color: #ffffff;
+    }
+
+    .badge-ingreso {
+      background: var(--azul);
+    }
+
+    .badge-egreso {
+      background: var(--naranja);
+    }
+
+    .badge-critico {
+      background: var(--rojo);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .search-row input {
+      flex: 1;
+    }
+
+    .search-row select {
+      min-width: 120px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 11px;
+    }
+
+    th,
+    td {
+      padding: 6px 4px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+
+    th {
+      background: var(--gris-claro);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .table-wrapper {
+      max-height: 260px;
+      overflow-y: auto;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      margin-top: 6px;
+    }
+
+    .stock-critico {
+      color: var(--rojo);
+      font-weight: 700;
+    }
+
+    .pill {
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid #ddd;
+      font-size: 10px;
+      background: #fff;
+    }
+
+    .pill-alta {
+      border-color: var(--rojo);
+      color: var(--rojo);
+    }
+
+    .pill-ok {
+      border-color: var(--azul);
+      color: var(--azul);
+    }
+
+    .footer-note {
+      margin-top: 8px;
+      font-size: 10px;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 16px;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      th:nth-child(5),
+      td:nth-child(5),
+      th:nth-child(6),
+      td:nth-child(6),
+      th:nth-child(7),
+      td:nth-child(7) {
+        display: none; /* simplifica vista en móvil */
+      }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo"><i class="fas fa-shopping-cart"></i> Inversiones Yegni Maik</div>
-            <div id="bcv-rate" class="bcv-rate"><i class="fas fa-dollar-sign"></i> USD: Bs. <span id="tasa">304,6796</span> <small>[BCV]</small></div>
-        </nav>
-    </header>
+  <header>
+    <img src="logo.png" alt="Logo Inversiones Yegni-Maik" />
+    <div class="title-block">
+      <h1>Inversiones Yegni-Maik</h1>
+      <span>Sistema interno de inventario de almacén</span>
+    </div>
+  </header>
 
-    <main>
-        <section>
-            <h1>¡Bienvenidos a tu Bodega Favorita!</h1>
-            <div class="abierto"><i class="fas fa-circle"></i> ABIERTO - Todos los días 8AM a 9PM</div>
-        </section>
+  <!-- Formulario de movimiento -->
+  <section class="card">
+    <h2>Movimiento de inventario</h2>
 
-        <section id="mapa">
-            <h2><i class="fas fa-map-marker-alt"></i> Nuestra Ubicación</h2>
-            <div class="map-container">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3928.123456789!2d-67.123456789!3d10.123456789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTAwMDEmIzM5O3N0cmVldHM%3D!5e0!3m2!1ses!2sve!4v1735678901234!5m2!1ses!2sve" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-        </section>
+    <div class="tabs">
+      <button class="tab-btn active" id="tabIngreso">Ingreso</button>
+      <button class="tab-btn egreso" id="tabEgreso">Egreso</button>
+    </div>
 
-        <section id="ofertas">
-            <h2><i class="fas fa-fire"></i> OFERTAS CALIENTES - ¡Hasta Agotar Stock!</h2>
-            <div class="ofertas-grid">
-                <!-- ARROZ - CAMBIA SOLO ESTA LÍNEA POR TUS FOTOS -->
-                <div class="oferta">
-                    <!-- CAMBIA src="TU-FOTO-ARROZ.jpg" (sube foto a carpeta /img/) -->
-                    <svg viewBox="0 0 200 200" class="producto-arroz">
-                        <rect width="200" height="200" fill="#FF6B35" rx="25"/>
-                        <rect x="30" y="40" width="140" height="120" fill="#FFE5B4" rx="15"/>
-                        <text x="100" y="105" text-anchor="middle" font-size="20" font-weight="bold" fill="#FF6B35">ARROZ</text>
-                        <text x="100" y="135" text-anchor="middle" font-size="14" fill="#2C3E50">Cualquier Marca</text>
-                        <circle cx="40" cy="60" r="8" fill="#FFD23F"/>
-                        <circle cx="160" cy="60" r="8" fill="#FFD23F"/>
-                    </svg>
-                    <h3>Arroz Cualquier Marca</h3>
-                    <div class="precio-mitad">¡A MITAD de Precio!</div>
-                    <p>Calidad garantizada - Stock limitado</p>
-                    <a href="https://wa.me/584244525765?text=Hola! Quiero el arroz en oferta" class="btn-whatsapp">
-                        <i class="fab fa-whatsapp"></i> Pedir Ahora
-                    </a>
-                </div>
+    <form id="formMovimiento">
+      <input type="hidden" id="tipoMovimiento" value="INGRESO" />
 
-                <!-- ACEITE - CAMBIA SOLO ESTA LÍNEA POR TUS FOTOS -->
-                <div class="oferta">
-                    <!-- CAMBIA src="TU-FOTO-ACEITE.jpg" (sube foto a carpeta /img/) -->
-                    <svg viewBox="0 0 200 200" class="producto-aceite">
-                        <rect width="200" height="200" fill="#FFD23F" rx="25"/>
-                        <ellipse cx="100" cy="65" rx="35" ry="50" fill="#FFF8E7" stroke="#FF6B35" stroke-width="4"/>
-                        <rect x="65" y="120" width="70" height="60" rx="10" fill="#F8F9FA" stroke="#2C3E50" stroke-width="2"/>
-                        <text x="100" y="105" text-anchor="middle" font-size="18" font-weight="bold" fill="#FF6B35">ACEITE</text>
-                        <text x="100" y="140" text-anchor="middle" font-size="12" fill="#2C3E50">1L</text>
-                    </svg>
-                    <h3>Aceite Vegetal</h3>
-                    <div class="precio-mitad">¡A MITAD de Precio!</div>
-                    <p>Presentaciones económicas</p>
-                    <a href="https://wa.me/584244525765?text=Hola! Quiero el aceite en oferta" class="btn-whatsapp">
-                        <i class="fab fa-whatsapp"></i> Pedir Ahora
-                    </a>
-                </div>
+      <div class="form-grid">
+        <div>
+          <label for="nombreProducto">Producto</label>
+          <input
+            type="text"
+            id="nombreProducto"
+            placeholder="Nombre del producto"
+            required
+          />
+        </div>
 
-                <!-- CAFÉ - CAMBIA SOLO ESTA LÍNEA POR TUS FOTOS -->
-                <div class="oferta">
-                    <!-- CAMBIA src="TU-FOTO-CAFE.jpg" (sube foto a carpeta /img/) -->
-                    <svg viewBox="0 0 200 200" class="producto-cafe">
-                        <rect width="200" height="200" fill="#8B4513" rx="25"/>
-                        <ellipse cx="100" cy="70" rx="40" ry="55" fill="#D2691E"/>
-                        <path d="M60 130 Q100 150 140 130 L140 170 Q100 185 60 170 Z" fill="#654321"/>
-                        <circle cx="85" cy="55" r="12" fill="#FF6B35"/>
-                        <circle cx="115" cy="55" r="12" fill="#FF6B35"/>
-                        <text x="100" y="105" text-anchor="middle" font-size="20" font-weight="bold" fill="white">CAFÉ</text>
-                        <text x="100" y="135" text-anchor="middle" font-size="14" fill="#FFD23F">Premium</text>
-                    </svg>
-                    <h3>Café Premium</h3>
-                    <div class="precio-mitad">¡A MITAD de Precio!</div>
-                    <p>Aroma y sabor inigualables</p>
-                    <a href="https://wa.me/584244525765?text=Hola! Quiero el café en oferta" class="btn-whatsapp">
-                        <i class="fab fa-whatsapp"></i> Pedir Ahora
-                    </a>
-                </div>
-            </div>
-        </section>
+        <div>
+          <label for="categoria">Categoría</label>
+          <select id="categoria" required>
+            <option value="">Seleccione</option>
+            <option value="aseo e higiene">Aseo e higiene</option>
+            <option value="jugueteria">Juguetería</option>
+            <option value="bebidas alcoholicas">Bebidas alcohólicas</option>
+            <option value="accesorios">Accesorios</option>
+            <option value="papeleria">Papelería</option>
+            <option value="alimentos">Alimentos</option>
+            <option value="embutidos">Embutidos</option>
+            <option value="golosinas y dulces">Golosinas y dulces</option>
+            <option value="bazar">Bazar</option>
+            <option value="utensilios básicos">Utensilios básicos</option>
+            <option value="productos para bebe">Productos para bebé</option>
+            <option value="ferretería">Ferretería</option>
+          </select>
+        </div>
 
-        <section id="pago">
-            <h2><i class="fas fa-mobile-alt"></i> Pago Móvil Fácil</h2>
-            <div class="qr-pago">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=04244525765%0ACedula:16897477%0ABanco:Mercantil%0AInversiones Yegni Maik&color=FF6B35&bgcolor=FFFFFF" alt="QR Pago Móvil">
-                <p><strong>Celular:</strong> 0424-4525765<br><strong>Cédula:</strong> 16897477<br><strong>Banco:</strong> Mercantil</p>
-                <a href="https://wa.me/584244525765?text=Hola! Quiero hacer un pago móvil" class="btn btn-whatsapp">Confirmar Pago</a>
-            </div>
-        </section>
+        <div>
+          <label for="cantidad">Cantidad</label>
+          <input
+            type="number"
+            id="cantidad"
+            min="1"
+            step="1"
+            placeholder="Unidades"
+            required
+          />
+        </div>
 
-        <section id="horario" class="horario">
-            <h2><i class="fas fa-clock"></i> Horario de Atención</h2>
-            <p><strong>Todos los días:</strong> 8:00 AM - 9:00 PM</p>
-            <p><i class="fas fa-calendar-check"></i> Lunes a Domingo - Sin descansos</p>
-        </section>
+        <div>
+          <label for="precioUnitario">Precio unitario (USD)</label>
+          <input
+            type="number"
+            id="precioUnitario"
+            min="0"
+            step="0.01"
+            placeholder="Solo para ingreso"
+          />
+        </div>
 
-        <section id="opiniones" class="opiniones">
-            <h2><i class="fas fa-star"></i> Opiniones de Nuestros Clientes</h2>
-            <div class="opiniones-grid">
-                <div class="opinion">
-                    <div style="color: #FFD23F; font-size: 1.2rem; margin-bottom: 1rem;">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <p>"Excelente bodega! Precios bajos y atención rápida. Recomiendo 100%"</p><strong>- María G., Naguanagua</strong>
-                </div>
-                <div class="opinion">
-                    <div style="color: #FFD23F; font-size: 1.2rem; margin-bottom: 1rem;">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <p>"Las ofertas son increíbles, arroz y café siempre frescos!"</p><strong>- José R., Cliente frecuente</strong>
-                </div>
-                <div class="opinion">
-                    <div style="color: #FFD23F; font-size: 1.2rem; margin-bottom: 1rem;">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <p>"Pago fácil con QR y entregas puntuales. ¡La mejor!"</p><strong>- Ana L., Vecina</strong>
-                </div>
-                <div class="opinion">
-                    <div style="color: #FFD23F; font-size: 1.2rem; margin-bottom: 1rem;">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <p>"Horario extendido perfecto para mi trabajo"</p><strong>- Pedro M., Trabajador</strong>
-                </div>
-            </div>
-            <div class="form-opinion">
-                <h3><i class="fas fa-comment"></i> Deja tu Opinión</h3>
-                <input type="text" id="nombre" placeholder="Tu nombre">
-                <textarea id="opinion" placeholder="Comparte tu experiencia..." rows="4"></textarea>
-                <button class="btn" onclick="enviarOpinion()"><i class="fab fa-whatsapp"></i> Enviar a WhatsApp</button>
-            </div>
-        </section>
-    </main>
+        <div>
+          <label for="responsable">Responsable</label>
+          <input
+            type="text"
+            id="responsable"
+            placeholder="Nombre y apellido"
+            required
+          />
+        </div>
 
-    <a href="https://wa.me/584244525765?text=Hola! Vi tu web Yegni Maik y quiero pedir ofertas" class="whatsapp-float" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>
+        <div>
+          <label for="caracteristicas">Características</label>
+          <input
+            type="text"
+            id="caracteristicas"
+            placeholder="Marca, presentación, detalle"
+          />
+        </div>
+      </div>
 
-    <script>
-        async function fetchBCV() {
-            try {
-                const res = await fetch('https://api.bcv.org.ve/dolar?format=json');
-                const data = await res.json();
-                document.getElementById('tasa').textContent = parseFloat(data.USD ?? 304.6796).toLocaleString('es-VE');
-            } catch { document.getElementById('tasa').textContent = '304,6796'; }
+      <button type="submit" class="btn btn-ingreso" id="btnGuardar">
+        Registrar ingreso
+      </button>
+    </form>
+
+    <p class="footer-note">
+      Los montos en dólares se calculan automáticamente en los egresos según el
+      precio unitario registrado en el último ingreso del producto.
+    </p>
+  </section>
+
+  <!-- Resumen y búsqueda -->
+  <section class="card">
+    <h2>Inventario y búsqueda</h2>
+
+    <div class="search-row">
+      <input
+        type="text"
+        id="busquedaNombre"
+        placeholder="Buscar producto por nombre"
+      />
+      <select id="busquedaCategoria">
+        <option value="">Todas las categorías</option>
+        <option value="aseo e higiene">Aseo e higiene</option>
+        <option value="jugueteria">Juguetería</option>
+        <option value="bebidas alcoholicas">Bebidas alcohólicas</option>
+        <option value="accesorios">Accesorios</option>
+        <option value="papeleria">Papelería</option>
+        <option value="alimentos">Alimentos</option>
+        <option value="embutidos">Embutidos</option>
+        <option value="golosinas y dulces">Golosinas y dulces</option>
+        <option value="bazar">Bazar</option>
+        <option value="utensilios básicos">Utensilios básicos</option>
+        <option value="productos para bebe">Productos para bebé</option>
+        <option value="ferretería">Ferretería</option>
+      </select>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Stock</th>
+            <th>Estado</th>
+            <th>Ingresos</th>
+            <th>Egresos</th>
+            <th>Responsables</th>
+          </tr>
+        </thead>
+        <tbody id="tablaInventario"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Reporte diario -->
+  <section class="card">
+    <h2>Reporte diario</h2>
+    <button class="btn btn-egreso" id="btnReporte">Ver reporte de hoy</button>
+
+    <div class="table-wrapper" id="reporteWrapper" style="display: none">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha / Hora</th>
+            <th>Tipo</th>
+            <th>Producto</th>
+            <th>Cant.</th>
+            <th>USD</th>
+            <th>Categoría</th>
+            <th>Responsable</th>
+          </tr>
+        </thead>
+        <tbody id="tablaReporte"></tbody>
+      </table>
+    </div>
+
+    <p class="footer-note">
+      El reporte muestra solo los movimientos del día actual y se reinicia
+      automáticamente al cambiar de fecha (después de las 24 horas).
+    </p>
+  </section>
+
+  <script>
+    const STORAGE_KEY = "yegni_maik_inventario_v1";
+
+    const state = {
+      movimientos: [],
+      fechaDia: "",
+    };
+
+    function hoyISO() {
+      const hoy = new Date();
+      return hoy.toISOString().slice(0, 10);
+    }
+
+    function cargarDesdeStorage() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const hoy = hoyISO();
+      if (!raw) {
+        state.movimientos = [];
+        state.fechaDia = hoy;
+        guardarEnStorage();
+        return;
+      }
+
+      try {
+        const data = JSON.parse(raw);
+        state.fechaDia = data.fechaDia || hoy;
+
+        if (state.fechaDia !== hoy) {
+          // nueva fecha: borrar movimientos del día anterior
+          state.movimientos = [];
+          state.fechaDia = hoy;
+          guardarEnStorage();
+        } else {
+          state.movimientos = Array.isArray(data.movimientos)
+            ? data.movimientos
+            : [];
         }
-        fetchBCV(); setInterval(fetchBCV, 300000);
-        
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', e => {
-                e.preventDefault();
-                document.querySelector(anchor.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
-            });
+      } catch (e) {
+        state.movimientos = [];
+        state.fechaDia = hoy;
+        guardarEnStorage();
+      }
+    }
+
+    function guardarEnStorage() {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          fechaDia: state.fechaDia,
+          movimientos: state.movimientos,
+        })
+      );
+    }
+
+    function formatearFechaHora(fecha) {
+      const d = new Date(fecha);
+      const dia = d.toLocaleDateString("es-VE");
+      const hora = d.toLocaleTimeString("es-VE", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      return `${dia} ${hora}`;
+    }
+
+    function construirInventario() {
+      const inventario = {};
+      const responsablesPorProducto = {};
+      const conteoIngresos = {};
+      const conteoEgresos = {};
+
+      state.movimientos.forEach((m) => {
+        const key = m.nombre.toLowerCase();
+        if (!inventario[key]) {
+          inventario[key] = {
+            nombre: m.nombre,
+            categoria: m.categoria,
+            stock: 0,
+            ultimoPrecio: 0,
+          };
+          responsablesPorProducto[key] = new Set();
+          conteoIngresos[key] = 0;
+          conteoEgresos[key] = 0;
+        }
+
+        if (m.tipo === "INGRESO") {
+          inventario[key].stock += m.cantidad;
+          inventario[key].ultimoPrecio = m.precioUnitario;
+          conteoIngresos[key] += 1;
+        } else {
+          inventario[key].stock -= m.cantidad;
+          conteoEgresos[key] += 1;
+        }
+        if (m.responsable) responsablesPorProducto[key].add(m.responsable);
+      });
+
+      return {
+        inventario,
+        responsablesPorProducto,
+        conteoIngresos,
+        conteoEgresos,
+      };
+    }
+
+    function renderInventario() {
+      const tbody = document.getElementById("tablaInventario");
+      tbody.innerHTML = "";
+
+      const filtroNombre = document
+        .getElementById("busquedaNombre")
+        .value.toLowerCase();
+      const filtroCat = document.getElementById("busquedaCategoria").value;
+
+      const {
+        inventario,
+        responsablesPorProducto,
+        conteoIngresos,
+        conteoEgresos,
+      } = construirInventario();
+
+      Object.keys(inventario)
+        .sort()
+        .forEach((key) => {
+          const item = inventario[key];
+
+          if (
+            filtroNombre &&
+            !item.nombre.toLowerCase().includes(filtroNombre)
+          ) {
+            return;
+          }
+          if (filtroCat && item.categoria !== filtroCat) {
+            return;
+          }
+
+          const responsables = Array.from(
+            responsablesPorProducto[key] || []
+          ).join(", ");
+
+          const tr = document.createElement("tr");
+
+          const esCritico = item.stock < 10;
+
+          const estadoHTML = esCritico
+            ? '<span class="pill pill-alta">Alerta &lt; 10</span>'
+            : '<span class="pill pill-ok">Stock ok</span>';
+
+          tr.innerHTML = `
+            <td>${item.nombre}</td>
+            <td>${item.categoria}</td>
+            <td class="${esCritico ? "stock-critico" : ""}">${
+            item.stock
+          }</td>
+            <td>${estadoHTML}</td>
+            <td>${conteoIngresos[key] || 0}</td>
+            <td>${conteoEgresos[key] || 0}</td>
+            <td>${responsables || "-"}</td>
+          `;
+
+          tbody.appendChild(tr);
         });
+    }
 
-        function enviarOpinion() {
-            const nombre = document.getElementById('nombre').value || 'Anónimo';
-            const opinion = document.getElementById('opinion').value || '';
-            window.open(`https://wa.me/584244525765?text=Nueva opinión de ${nombre}: ${opinion}`);
+    function renderReporte() {
+      const tbody = document.getElementById("tablaReporte");
+      tbody.innerHTML = "";
+
+      const movimientosOrdenados = [...state.movimientos].sort(
+        (a, b) => new Date(b.fechaHora) - new Date(a.fechaHora)
+      );
+
+      movimientosOrdenados.forEach((m) => {
+        const tr = document.createElement("tr");
+        const badge =
+          m.tipo === "INGRESO"
+            ? '<span class="badge badge-ingreso">Ingreso</span>'
+            : '<span class="badge badge-egreso">Egreso</span>';
+        tr.innerHTML = `
+          <td>${formatearFechaHora(m.fechaHora)}</td>
+          <td>${badge}</td>
+          <td>${m.nombre}</td>
+          <td>${m.cantidad}</td>
+          <td>${m.totalUSD.toFixed(2)}</td>
+          <td>${m.categoria}</td>
+          <td>${m.responsable || "-"}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function registrarMovimiento(e) {
+      e.preventDefault();
+
+      const tipo = document.getElementById("tipoMovimiento").value;
+      const nombre = document
+        .getElementById("nombreProducto")
+        .value.trim()
+        .toUpperCase();
+      const categoria = document.getElementById("categoria").value;
+      const cantidad = parseInt(
+        document.getElementById("cantidad").value,
+        10
+      );
+      const responsable = document
+        .getElementById("responsable")
+        .value.trim();
+      const caracteristicas = document
+        .getElementById("caracteristicas")
+        .value.trim();
+
+      if (!nombre || !categoria || !cantidad || !responsable) return;
+
+      let precioUnitario = parseFloat(
+        document.getElementById("precioUnitario").value
+      );
+      if (tipo === "EGRESO") {
+        const { inventario } = construirInventario();
+        const key = nombre.toLowerCase();
+        const item = inventario[key];
+        if (!item || item.stock < cantidad) {
+          alert(
+            "No hay stock suficiente o el producto no tiene ingresos registrados."
+          );
+          return;
         }
-    </script>
+        precioUnitario = item.ultimoPrecio || 0;
+      } else {
+        if (isNaN(precioUnitario)) precioUnitario = 0;
+      }
+
+      const totalUSD = precioUnitario * cantidad;
+
+      const movimiento = {
+        id: Date.now(),
+        tipo,
+        nombre,
+        categoria,
+        cantidad,
+        precioUnitario,
+        totalUSD,
+        responsable,
+        caracteristicas,
+        fechaHora: new Date().toISOString(),
+      };
+
+      state.movimientos.push(movimiento);
+      guardarEnStorage();
+      renderInventario();
+
+      document.getElementById("formMovimiento").reset();
+      document.getElementById("categoria").value = "";
+      if (tipo === "INGRESO") {
+        document.getElementById("precioUnitario").value = "";
+      }
+    }
+
+    function configurarTabs() {
+      const tabIngreso = document.getElementById("tabIngreso");
+      const tabEgreso = document.getElementById("tabEgreso");
+      const tipoInput = document.getElementById("tipoMovimiento");
+      const btnGuardar = document.getElementById("btnGuardar");
+      const precioInput = document.getElementById("precioUnitario");
+
+      tabIngreso.addEventListener("click", () => {
+        tabIngreso.classList.add("active");
+        tabEgreso.classList.remove("active");
+        tipoInput.value = "INGRESO";
+        btnGuardar.textContent = "Registrar ingreso";
+        btnGuardar.classList.remove("btn-egreso");
+        btnGuardar.classList.add("btn-ingreso");
+        precioInput.disabled = false;
+        precioInput.placeholder = "Precio unitario (USD)";
+      });
+
+      tabEgreso.addEventListener("click", () => {
+        tabEgreso.classList.add("active");
+        tabIngreso.classList.remove("active");
+        tipoInput.value = "EGRESO";
+        btnGuardar.textContent = "Registrar egreso";
+        btnGuardar.classList.remove("btn-ingreso");
+        btnGuardar.classList.add("btn-egreso");
+        precioInput.disabled = true;
+        precioInput.placeholder =
+          "Se usa el último precio registrado";
+      });
+    }
+
+    function configurarBusqueda() {
+      document
+        .getElementById("busquedaNombre")
+        .addEventListener("input", renderInventario);
+      document
+        .getElementById("busquedaCategoria")
+        .addEventListener("change", renderInventario);
+    }
+
+    function configurarReporte() {
+      const btnReporte = document.getElementById("btnReporte");
+      const wrapper = document.getElementById("reporteWrapper");
+      btnReporte.addEventListener("click", () => {
+        const visible = wrapper.style.display === "block";
+        wrapper.style.display = visible ? "none" : "block";
+        if (!visible) {
+          renderReporte();
+        }
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      cargarDesdeStorage();
+      configurarTabs();
+      configurarBusqueda();
+      configurarReporte();
+      document
+        .getElementById("formMovimiento")
+        .addEventListener("submit", registrarMovimiento);
+      renderInventario();
+    });
+  </script>
 </body>
 </html>
