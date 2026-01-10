@@ -1,4 +1,4 @@
-"<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -34,7 +34,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     header img {
@@ -106,10 +106,6 @@
       margin-top: 6px;
     }
 
-    .form-grid.full {
-      grid-template-columns: 1fr;
-    }
-
     label {
       font-size: 11px;
       color: #555;
@@ -153,6 +149,15 @@
       background: var(--naranja);
     }
 
+    .btn-borrar {
+      background: var(--rojo);
+    }
+
+    .btn-exportar {
+      background: var(--amarillo);
+      color: #333;
+    }
+
     .btn:hover {
       opacity: 0.9;
     }
@@ -173,10 +178,6 @@
       background: var(--naranja);
     }
 
-    .badge-critico {
-      background: var(--rojo);
-    }
-
     .search-row {
       display: flex;
       gap: 8px;
@@ -190,6 +191,13 @@
 
     .search-row select {
       min-width: 120px;
+    }
+
+    .search-row .btn {
+      flex: none;
+      width: auto;
+      padding: 8px 10px;
+      font-size: 11px;
     }
 
     table {
@@ -263,7 +271,7 @@
       td:nth-child(6),
       th:nth-child(7),
       td:nth-child(7) {
-        display: none; /* simplifica vista en móvil */
+        display: none;
       }
     }
   </style>
@@ -421,7 +429,12 @@
   <!-- Reporte diario -->
   <section class="card">
     <h2>Reporte diario</h2>
-    <button class="btn btn-egreso" id="btnReporte">Ver reporte de hoy</button>
+
+    <div class="search-row">
+      <button class="btn btn-egreso" id="btnReporte">Ver reporte de hoy</button>
+      <button class="btn btn-borrar" id="btnBorrarHistorial">Borrar historial</button>
+      <button class="btn btn-exportar" id="btnExportar">Exportar historial</button>
+    </div>
 
     <div class="table-wrapper" id="reporteWrapper" style="display: none">
       <table>
@@ -441,8 +454,8 @@
     </div>
 
     <p class="footer-note">
-      El reporte muestra solo los movimientos del día actual y se reinicia
-      automáticamente al cambiar de fecha (después de las 24 horas).
+      El reporte muestra los movimientos registrados en el día.  
+      Puedes exportar o borrar el historial cuando lo necesites.
     </p>
   </section>
 
@@ -451,12 +464,11 @@
 
     const state = {
       movimientos: [],
-      fechaDia: "",
+      fechaDia: ""
     };
 
     function hoyISO() {
-      const hoy = new Date();
-      return hoy.toISOString().slice(0, 10);
+      return new Date().toISOString().slice(0, 10);
     }
 
     function cargarDesdeStorage() {
@@ -472,9 +484,8 @@
       try {
         const data = JSON.parse(raw);
         state.fechaDia = data.fechaDia || hoy;
-
         if (state.fechaDia !== hoy) {
-          // nueva fecha: borrar movimientos del día anterior
+          // nuevo día: se limpia historial pero se conserva estructura
           state.movimientos = [];
           state.fechaDia = hoy;
           guardarEnStorage();
@@ -495,7 +506,7 @@
         STORAGE_KEY,
         JSON.stringify({
           fechaDia: state.fechaDia,
-          movimientos: state.movimientos,
+          movimientos: state.movimientos
         })
       );
     }
@@ -505,7 +516,7 @@
       const dia = d.toLocaleDateString("es-VE");
       const hora = d.toLocaleTimeString("es-VE", {
         hour: "2-digit",
-        minute: "2-digit",
+        minute: "2-digit"
       });
       return `${dia} ${hora}`;
     }
@@ -523,7 +534,7 @@
             nombre: m.nombre,
             categoria: m.categoria,
             stock: 0,
-            ultimoPrecio: 0,
+            ultimoPrecio: 0
           };
           responsablesPorProducto[key] = new Set();
           conteoIngresos[key] = 0;
@@ -545,7 +556,7 @@
         inventario,
         responsablesPorProducto,
         conteoIngresos,
-        conteoEgresos,
+        conteoEgresos
       };
     }
 
@@ -562,50 +573,54 @@
         inventario,
         responsablesPorProducto,
         conteoIngresos,
-        conteoEgresos,
+        conteoEgresos
       } = construirInventario();
 
-      Object.keys(inventario)
-        .sort()
-        .forEach((key) => {
-          const item = inventario[key];
+      const keys = Object.keys(inventario).sort();
 
-          if (
-            filtroNombre &&
-            !item.nombre.toLowerCase().includes(filtroNombre)
-          ) {
-            return;
-          }
-          if (filtroCat && item.categoria !== filtroCat) {
-            return;
-          }
+      if (keys.length === 0) {
+        tbody.innerHTML =
+          '<tr><td colspan="7" style="text-align:center;color:#888;padding:10px;">Sin productos cargados</td></tr>';
+        return;
+      }
 
-          const responsables = Array.from(
-            responsablesPorProducto[key] || []
-          ).join(", ");
+      keys.forEach((key) => {
+        const item = inventario[key];
 
-          const tr = document.createElement("tr");
+        if (
+          filtroNombre &&
+          !item.nombre.toLowerCase().includes(filtroNombre)
+        ) {
+          return;
+        }
+        if (filtroCat && item.categoria !== filtroCat) {
+          return;
+        }
 
-          const esCritico = item.stock < 10;
+        const responsables = Array.from(
+          responsablesPorProducto[key] || []
+        ).join(", ");
 
-          const estadoHTML = esCritico
-            ? '<span class="pill pill-alta">Alerta &lt; 10</span>'
-            : '<span class="pill pill-ok">Stock ok</span>';
+        const tr = document.createElement("tr");
 
-          tr.innerHTML = `
-            <td>${item.nombre}</td>
-            <td>${item.categoria}</td>
-            <td class="${esCritico ? "stock-critico" : ""}">${
-            item.stock
-          }</td>
-            <td>${estadoHTML}</td>
-            <td>${conteoIngresos[key] || 0}</td>
-            <td>${conteoEgresos[key] || 0}</td>
-            <td>${responsables || "-"}</td>
-          `;
+        const esCritico = item.stock < 10;
 
-          tbody.appendChild(tr);
-        });
+        const estadoHTML = esCritico
+          ? '<span class="pill pill-alta">Alerta &lt; 10</span>'
+          : '<span class="pill pill-ok">Stock ok</span>';
+
+        tr.innerHTML = `
+          <td>${item.nombre}</td>
+          <td>${item.categoria}</td>
+          <td class="${esCritico ? "stock-critico" : ""}">${item.stock}</td>
+          <td>${estadoHTML}</td>
+          <td>${conteoIngresos[key] || 0}</td>
+          <td>${conteoEgresos[key] || 0}</td>
+          <td>${responsables || "-"}</td>
+        `;
+
+        tbody.appendChild(tr);
+      });
     }
 
     function renderReporte() {
@@ -615,6 +630,12 @@
       const movimientosOrdenados = [...state.movimientos].sort(
         (a, b) => new Date(b.fechaHora) - new Date(a.fechaHora)
       );
+
+      if (movimientosOrdenados.length === 0) {
+        tbody.innerHTML =
+          '<tr><td colspan="7" style="text-align:center;color:#888;padding:10px;">Sin movimientos registrados</td></tr>';
+        return;
+      }
 
       movimientosOrdenados.forEach((m) => {
         const tr = document.createElement("tr");
@@ -633,6 +654,71 @@
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    function generarTextoReporte() {
+      let texto = "REPORTE DE MOVIMIENTOS - INVERSIONES YEGNI-MAIK
+
+";
+      texto += `Fecha: ${new Date().toLocaleString("es-VE")}
+
+`;
+      if (state.movimientos.length === 0) {
+        texto += "Sin movimientos registrados en el día.
+";
+        return texto;
+      }
+
+      texto += "Movimientos del día:
+";
+      state.movimientos.forEach((m) => {
+        texto += `- ${formatearFechaHora(m.fechaHora)} | ${
+          m.tipo
+        } | ${m.nombre} | Cant: ${m.cantidad} | USD: ${m.totalUSD.toFixed(
+          2
+        )} | Cat: ${m.categoria} | Resp: ${m.responsable}
+`;
+      });
+
+      texto += "
+Inventario actual:
+";
+      const { inventario } = construirInventario();
+      Object.keys(inventario)
+        .sort()
+        .forEach((key) => {
+          const item = inventario[key];
+          texto += `• ${item.nombre}: ${item.stock} (${item.categoria})
+`;
+        });
+
+      return texto;
+    }
+
+    function exportarHistorial() {
+      const email = "jhoncuenta2@gmail.com";
+      const subject = `Reporte inventario Yegni-Maik ${hoyISO()}`;
+      const body = generarTextoReporte();
+      const mailto = `mailto:${email}?subject=${encodeURIComponent(
+        subject
+      )}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailto;
+    }
+
+    function borrarHistorial() {
+      if (
+        !confirm(
+          "¿Seguro que desea borrar TODO el historial del día?
+Esta acción no se puede deshacer."
+        )
+      ) {
+        return;
+      }
+      state.movimientos = [];
+      guardarEnStorage();
+      renderInventario();
+      renderReporte();
+      alert("Historial del día borrado correctamente.");
     }
 
     function registrarMovimiento(e) {
@@ -655,11 +741,15 @@
         .getElementById("caracteristicas")
         .value.trim();
 
-      if (!nombre || !categoria || !cantidad || !responsable) return;
+      if (!nombre || !categoria || !cantidad || !responsable) {
+        alert("Complete todos los campos obligatorios.");
+        return;
+      }
 
       let precioUnitario = parseFloat(
         document.getElementById("precioUnitario").value
       );
+
       if (tipo === "EGRESO") {
         const { inventario } = construirInventario();
         const key = nombre.toLowerCase();
@@ -672,7 +762,10 @@
         }
         precioUnitario = item.ultimoPrecio || 0;
       } else {
-        if (isNaN(precioUnitario)) precioUnitario = 0;
+        if (isNaN(precioUnitario) || precioUnitario <= 0) {
+          alert("Ingrese un precio unitario válido para ingresos.");
+          return;
+        }
       }
 
       const totalUSD = precioUnitario * cantidad;
@@ -687,7 +780,7 @@
         totalUSD,
         responsable,
         caracteristicas,
-        fechaHora: new Date().toISOString(),
+        fechaHora: new Date().toISOString()
       };
 
       state.movimientos.push(movimiento);
@@ -727,8 +820,7 @@
         btnGuardar.classList.remove("btn-ingreso");
         btnGuardar.classList.add("btn-egreso");
         precioInput.disabled = true;
-        precioInput.placeholder =
-          "Se usa el último precio registrado";
+        precioInput.placeholder = "Se usa el último precio registrado";
       });
     }
 
@@ -751,6 +843,14 @@
           renderReporte();
         }
       });
+
+      document
+        .getElementById("btnBorrarHistorial")
+        .addEventListener("click", borrarHistorial);
+
+      document
+        .getElementById("btnExportar")
+        .addEventListener("click", exportarHistorial);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -765,4 +865,4 @@
     });
   </script>
 </body>
-</html>"
+</html>
