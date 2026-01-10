@@ -8,7 +8,6 @@
 <style>
 :root{
 --azul:#0056a8;
---azul-oscuro:#003b73;
 --naranja:#f26c21;
 --rojo:#e32026;
 --gris:#f5f5f5;
@@ -18,30 +17,27 @@ body{margin:0;padding:10px;background:#fff;color:#333}
 header{display:flex;gap:10px;align-items:center;margin-bottom:15px}
 header img{height:60px}
 .card{background:#fff;border-radius:10px;padding:15px;margin-bottom:15px;box-shadow:0 2px 6px rgba(0,0,0,.06)}
-h1{font-size:18px;color:var(--azul-oscuro)}
-h2{font-size:14px;margin-bottom:10px;color:var(--azul-oscuro)}
+h1{font-size:18px}
+h2{font-size:14px;margin-bottom:10px}
 .tabs{display:flex;border:1px solid var(--azul);border-radius:8px;overflow:hidden;margin-bottom:10px}
 .tab-btn{flex:1;padding:10px;border:none;background:#fff;cursor:pointer}
-.tab-btn.active{background:var(--azul);color:#fff;font-weight:600}
+.tab-btn.active{background:var(--azul);color:#fff}
 .tab-btn.egreso.active{background:var(--naranja)}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 label{font-size:11px}
-input,select{padding:8px;border-radius:6px;border:1px solid #ccc;font-size:12px}
-.btn{width:100%;padding:12px;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer}
+input,select{padding:8px;border-radius:6px;border:1px solid #ccc}
+.btn{width:100%;padding:12px;border:none;border-radius:6px;color:#fff;font-weight:600}
 .btn-ingreso{background:var(--azul)}
 .btn-egreso{background:var(--naranja)}
 .btn-borrar{background:var(--rojo)}
-.search-row{display:flex;gap:8px;margin-bottom:10px}
 table{width:100%;border-collapse:collapse;font-size:12px}
 th,td{padding:8px;border-bottom:1px solid #eee}
-th{background:var(--gris);position:sticky;top:0}
-.table-wrapper{max-height:300px;overflow:auto;border:1px solid #eee;border-radius:8px}
+th{background:var(--gris)}
+.table-wrapper{max-height:300px;overflow:auto;border:1px solid #eee}
 .stock-critico{color:var(--rojo);font-weight:700}
 .pill{font-size:10px;padding:3px 8px;border-radius:20px;border:1px solid}
 .pill-ok{color:var(--azul);border-color:var(--azul)}
 .pill-alta{color:var(--rojo);border-color:var(--rojo)}
-.footer-note{font-size:11px;color:#777;margin-top:10px}
-@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
 </style>
 </head>
 
@@ -56,127 +52,75 @@ th{background:var(--gris);position:sticky;top:0}
 </header>
 
 <section class="card">
-<h2>📦 Movimiento de Inventario</h2>
+<h2>📦 Movimiento</h2>
 
 <div class="tabs">
-<button class="tab-btn active" id="tabIngreso">➕ Ingreso</button>
-<button class="tab-btn egreso" id="tabEgreso">➖ Egreso</button>
+<button class="tab-btn active" id="tabIngreso">Ingreso</button>
+<button class="tab-btn egreso" id="tabEgreso">Egreso</button>
 </div>
 
 <form id="formMovimiento">
 <input type="hidden" id="tipoMovimiento" value="INGRESO">
 
 <div class="form-grid">
+<div><label>Producto</label><input id="nombreProducto" required></div>
 <div>
-<label>Producto *</label>
-<input id="nombreProducto" required>
-</div>
-<div>
-<label>Categoría *</label>
-<select id="categoria" required>
+<label>Categoría</label>
+<select id="categoriaProducto" required>
 <option value="">Seleccione</option>
 <option value="alimentos">Alimentos</option>
-<option value="aseo">Aseo</option>
 <option value="bebidas">Bebidas</option>
+<option value="aseo">Aseo</option>
 <option value="ferreteria">Ferretería</option>
 </select>
 </div>
-<div>
-<label>Cantidad *</label>
-<input type="number" id="cantidad" min="1" required>
-</div>
-<div>
-<label>Precio USD</label>
-<input type="number" id="precioUnitario" step="0.01">
-</div>
-<div>
-<label>Responsable *</label>
-<input id="responsable" required>
-</div>
+<div><label>Cantidad</label><input type="number" id="cantidadProducto" min="1" required></div>
+<div><label>Precio USD</label><input type="number" id="precioUnitario" step="0.01"></div>
+<div><label>Responsable</label><input id="responsableProducto" required></div>
 </div>
 
-<button class="btn btn-ingreso" id="btnGuardar">➕ Registrar Ingreso</button>
+<button class="btn btn-ingreso" id="btnGuardar">Registrar</button>
 </form>
-
-<p class="footer-note">En egresos el precio se toma del último ingreso</p>
 </section>
 
 <section class="card">
-<h2>📊 Inventario Actual</h2>
-
+<h2>📊 Inventario</h2>
 <div class="table-wrapper">
 <table>
 <thead>
 <tr>
-<th>Producto</th>
-<th>Categoría</th>
-<th>Stock</th>
-<th>Estado</th>
-<th>Ingresos</th>
-<th>Egresos</th>
-<th>Responsables</th>
+<th>Producto</th><th>Categoría</th><th>Stock</th><th>Estado</th>
 </tr>
 </thead>
 <tbody id="tablaInventario">
-<tr><td colspan="7" style="text-align:center">Sin datos</td></tr>
+<tr><td colspan="4" style="text-align:center">Sin registros</td></tr>
 </tbody>
 </table>
 </div>
 </section>
 
-<section class="card">
-<h2>📈 Reportes</h2>
-<button class="btn btn-egreso" id="btnReporte">📋 Ver movimientos</button>
-<button class="btn btn-borrar" id="btnBorrarHistorial">🗑️ Borrar todo</button>
-
-<div class="table-wrapper" id="reporteWrapper" style="display:none">
-<table>
-<thead>
-<tr>
-<th>Fecha</th>
-<th>Tipo</th>
-<th>Producto</th>
-<th>Cant.</th>
-<th>Total USD</th>
-<th>Responsable</th>
-</tr>
-</thead>
-<tbody id="tablaReporte"></tbody>
-</table>
-</div>
-</section>
-
 <script>
-const STORAGE_KEY="yegni_maik_inventario_v1";
+const STORAGE_KEY="inventario_yegni";
 let movimientos=[];
 
-function cargarDatos(){
-const data=localStorage.getItem(STORAGE_KEY);
-movimientos=data?JSON.parse(data):[];
-}
-
-function guardarDatos(){
-localStorage.setItem(STORAGE_KEY,JSON.stringify(movimientos));
-}
+function guardar(){localStorage.setItem(STORAGE_KEY,JSON.stringify(movimientos))}
+function cargar(){movimientos=JSON.parse(localStorage.getItem(STORAGE_KEY))||[]}
 
 function calcularInventario(){
-const inv={},resp={},ing={},egr={};
+const inv={};
 movimientos.forEach(m=>{
-const k=m.nombre;
-if(!inv[k]){
-inv[k]={...m,stock:0};
-resp[k]=new Set();ing[k]=0;egr[k]=0;
+if(!inv[m.nombre]){
+inv[m.nombre]={...m,stock:0}
 }
-m.tipo==="INGRESO"? (inv[k].stock+=m.cantidad,ing[k]++):(inv[k].stock-=m.cantidad,egr[k]++);
-resp[k].add(m.responsable);
+m.tipo==="INGRESO"?inv[m.nombre].stock+=m.cantidad:inv[m.nombre].stock-=m.cantidad;
 });
-return{inv,resp,ing,egr};
+return inv;
 }
 
-function mostrarInventario(){
+function pintarInventario(){
 const tbody=document.getElementById("tablaInventario");
 tbody.innerHTML="";
-const {inv,resp,ing,egr}=calcularInventario();
+const inv=calcularInventario();
 Object.values(inv).forEach(i=>{
 const crit=i.stock<10;
 tbody.innerHTML+=`
@@ -185,94 +129,46 @@ tbody.innerHTML+=`
 <td>${i.categoria}</td>
 <td class="${crit?"stock-critico":""}">${i.stock}</td>
 <td><span class="pill ${crit?"pill-alta":"pill-ok"}">${crit?"ALERTA":"OK"}</span></td>
-<td>${ing[i.nombre]}</td>
-<td>${egr[i.nombre]}</td>
-<td>${[...resp[i.nombre]].join(", ")}</td>
 </tr>`;
 });
-}
-
-function mostrarReporte(){
-const tbody=document.getElementById("tablaReporte");
-tbody.innerHTML="";
-movimientos.slice().reverse().forEach(m=>{
-tbody.innerHTML+=`
-<tr>
-<td>${new Date(m.fecha).toLocaleString()}</td>
-<td>${m.tipo}</td>
-<td>${m.nombre}</td>
-<td>${m.cantidad}</td>
-<td>$${m.total.toFixed(2)}</td>
-<td>${m.responsable}</td>
-</tr>`;
-});
-}
-
-function refrescarTablero(){
-mostrarInventario();
-mostrarReporte();
 }
 
 document.getElementById("formMovimiento").onsubmit=e=>{
 e.preventDefault();
-const tipo=tipoMovimiento.value;
-const nombre=nombreProducto.value.trim().toUpperCase();
-const categoria=categoria.value;
-const cantidad=parseInt(cantidad.value);
-const responsable=responsable.value;
-const precio=parseFloat(precioUnitario.value)||0;
 
-if(tipo==="EGRESO"){
-const {inv}=calcularInventario();
-if(!inv[nombre]||inv[nombre].stock<cantidad){alert("Stock insuficiente");return;}
-}
-
-movimientos.push({
-tipo,nombre,categoria,cantidad,
-precio,
-total:precio*cantidad,
-responsable,
+const movimiento={
+tipo:document.getElementById("tipoMovimiento").value,
+nombre:document.getElementById("nombreProducto").value.toUpperCase(),
+categoria:document.getElementById("categoriaProducto").value,
+cantidad:Number(document.getElementById("cantidadProducto").value),
+precio:Number(document.getElementById("precioUnitario").value)||0,
+responsable:document.getElementById("responsableProducto").value,
 fecha:new Date()
-});
-guardarDatos();
-formMovimiento.reset();
-refrescarTablero();
+};
+
+movimientos.push(movimiento);
+guardar();
+pintarInventario();
+e.target.reset();
 };
 
 tabIngreso.onclick=()=>{
 tipoMovimiento.value="INGRESO";
-btnGuardar.textContent="➕ Registrar Ingreso";
 btnGuardar.className="btn btn-ingreso";
-precioUnitario.disabled=false;
 tabIngreso.classList.add("active");
 tabEgreso.classList.remove("active");
 };
 
 tabEgreso.onclick=()=>{
 tipoMovimiento.value="EGRESO";
-btnGuardar.textContent="➖ Registrar Egreso";
 btnGuardar.className="btn btn-egreso";
-precioUnitario.disabled=true;
 tabEgreso.classList.add("active");
 tabIngreso.classList.remove("active");
 };
 
-btnReporte.onclick=()=>{
-reporteWrapper.style.display=reporteWrapper.style.display==="block"?"none":"block";
-mostrarReporte();
-};
-
-btnBorrarHistorial.onclick=()=>{
-if(confirm("¿Borrar todo?")){
-movimientos=[];
-guardarDatos();
-refrescarTablero();
-}
-};
-
 document.addEventListener("DOMContentLoaded",()=>{
-cargarDatos();
-refrescarTablero();
+cargar();
+pintarInventario();
 });
 </script>
 
