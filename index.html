@@ -1,685 +1,280 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inventario - Inversiones Yegni-Maik</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventario - Inversiones Yegni-Maik</title>
 
-  <style>
-    :root {
-      --azul: #0056a8;
-      --azul-oscuro: #003b73;
-      --naranja: #f26c21;
-      --rojo: #e32026;
-      --gris-claro: #f5f5f5;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, sans-serif;
-    }
-
-    body {
-      background: #ffffff;
-      color: #333;
-      padding: 10px;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    header img {
-      height: 60px;
-    }
-
-    header .title-block {
-      display: flex;
-      flex-direction: column;
-    }
-
-    header h1 {
-      font-size: 18px;
-      color: var(--azul-oscuro);
-    }
-
-    header span {
-      font-size: 11px;
-      color: #666;
-    }
-
-    .card {
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-    }
-
-    .card h2 {
-      font-size: 14px;
-      margin-bottom: 10px;
-      color: var(--azul-oscuro);
-    }
-
-    .tabs {
-      display: flex;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid var(--azul);
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 12px;
-      text-align: center;
-      font-size: 13px;
-      cursor: pointer;
-      border: none;
-      background: #ffffff;
-      color: var(--azul-oscuro);
-    }
-
-    .tab-btn.active {
-      background: var(--azul);
-      color: #ffffff;
-      font-weight: 600;
-    }
-
-    .tab-btn.egreso.active {
-      background: var(--naranja);
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    label {
-      font-size: 11px;
-      color: #555;
-      display: block;
-      margin-bottom: 3px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 8px;
-      font-size: 12px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    input:focus, select:focus {
-      outline: none;
-      border-color: var(--azul);
-      box-shadow: 0 0 0 2px rgba(0, 86, 168, 0.1);
-    }
-
-    .btn {
-      width: 100%;
-      padding: 12px;
-      border-radius: 6px;
-      border: none;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      color: #ffffff;
-    }
-
-    .btn-ingreso { background: var(--azul); }
-    .btn-egreso { background: var(--naranja); }
-    .btn-borrar { background: var(--rojo); }
-
-    .btn:hover { opacity: 0.9; }
-
-    .search-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
-
-    .search-row input { flex: 1; }
-    .search-row select { min-width: 130px; }
-    .search-row .btn { 
-      flex: none; 
-      width: auto; 
-      padding: 10px 15px; 
-      font-size: 12px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-
-    th, td {
-      padding: 8px 6px;
-      border-bottom: 1px solid #eee;
-      text-align: left;
-    }
-
-    th {
-      background: var(--gris-claro);
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      font-weight: 600;
-    }
-
-    .table-wrapper {
-      max-height: 300px;
-      overflow-y: auto;
-      border-radius: 8px;
-      border: 1px solid #eee;
-      margin-top: 10px;
-    }
-
-    .stock-critico {
-      color: var(--rojo);
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .pill {
-      padding: 3px 8px;
-      border-radius: 20px;
-      border: 1px solid;
-      font-size: 10px;
-      font-weight: 600;
-    }
-
-    .pill-alta {
-      border-color: var(--rojo);
-      color: var(--rojo);
-      background: rgba(227, 32, 38, 0.1);
-    }
-
-    .pill-ok {
-      border-color: var(--azul);
-      color: var(--azul);
-      background: rgba(0, 86, 168, 0.1);
-    }
-
-    .footer-note {
-      margin-top: 10px;
-      font-size: 11px;
-      color: #777;
-      line-height: 1.4;
-    }
-
-    @media (max-width: 600px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .search-row { flex-direction: column; }
-      th:nth-child(5), td:nth-child(5),
-      th:nth-child(6), td:nth-child(6),
-      th:nth-child(7), td:nth-child(7) { display: none; }
-    }
-  </style>
+<style>
+:root{
+--azul:#0056a8;
+--azul-oscuro:#003b73;
+--naranja:#f26c21;
+--rojo:#e32026;
+--gris:#f5f5f5;
+}
+*{box-sizing:border-box;font-family:system-ui}
+body{margin:0;padding:10px;background:#fff;color:#333}
+header{display:flex;gap:10px;align-items:center;margin-bottom:15px}
+header img{height:60px}
+.card{background:#fff;border-radius:10px;padding:15px;margin-bottom:15px;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+h1{font-size:18px;color:var(--azul-oscuro)}
+h2{font-size:14px;margin-bottom:10px;color:var(--azul-oscuro)}
+.tabs{display:flex;border:1px solid var(--azul);border-radius:8px;overflow:hidden;margin-bottom:10px}
+.tab-btn{flex:1;padding:10px;border:none;background:#fff;cursor:pointer}
+.tab-btn.active{background:var(--azul);color:#fff;font-weight:600}
+.tab-btn.egreso.active{background:var(--naranja)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{font-size:11px}
+input,select{padding:8px;border-radius:6px;border:1px solid #ccc;font-size:12px}
+.btn{width:100%;padding:12px;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer}
+.btn-ingreso{background:var(--azul)}
+.btn-egreso{background:var(--naranja)}
+.btn-borrar{background:var(--rojo)}
+.search-row{display:flex;gap:8px;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:8px;border-bottom:1px solid #eee}
+th{background:var(--gris);position:sticky;top:0}
+.table-wrapper{max-height:300px;overflow:auto;border:1px solid #eee;border-radius:8px}
+.stock-critico{color:var(--rojo);font-weight:700}
+.pill{font-size:10px;padding:3px 8px;border-radius:20px;border:1px solid}
+.pill-ok{color:var(--azul);border-color:var(--azul)}
+.pill-alta{color:var(--rojo);border-color:var(--rojo)}
+.footer-note{font-size:11px;color:#777;margin-top:10px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+</style>
 </head>
+
 <body>
-  <header>
-    <img src="logo.png" alt="Logo Yegni-Maik" />
-    <div class="title-block">
-      <h1>Inversiones Yegni-Maik</h1>
-      <span>Sistema de Inventario - Almacén</span>
-    </div>
-  </header>
 
-  <!-- FORMULARIO MOVIMIENTOS -->
-  <section class="card">
-    <h2>📦 Movimiento de Inventario</h2>
+<header>
+<img src="logo.png">
+<div>
+<h1>Inversiones Yegni-Maik</h1>
+<span>Sistema de Inventario</span>
+</div>
+</header>
 
-    <div class="tabs">
-      <button class="tab-btn active" id="tabIngreso">➕ Ingreso</button>
-      <button class="tab-btn egreso" id="tabEgreso">➖ Egreso</button>
-    </div>
+<section class="card">
+<h2>📦 Movimiento de Inventario</h2>
 
-    <form id="formMovimiento">
-      <input type="hidden" id="tipoMovimiento" value="INGRESO" />
+<div class="tabs">
+<button class="tab-btn active" id="tabIngreso">➕ Ingreso</button>
+<button class="tab-btn egreso" id="tabEgreso">➖ Egreso</button>
+</div>
 
-      <div class="form-grid">
-        <div>
-          <label>Producto *</label>
-          <input type="text" id="nombreProducto" placeholder="Harina Pan 900g" required />
-        </div>
+<form id="formMovimiento">
+<input type="hidden" id="tipoMovimiento" value="INGRESO">
 
-        <div>
-          <label>Categoría *</label>
-          <select id="categoria" required>
-            <option value="">Seleccione...</option>
-            <option value="aseo e higiene">🧼 Aseo e higiene</option>
-            <option value="jugueteria">🧸 Juguetería</option>
-            <option value="bebidas alcoholicas">🍺 Bebidas alcohólicas</option>
-            <option value="accesorios">💍 Accesorios</option>
-            <option value="papeleria">📝 Papelería</option>
-            <option value="alimentos">🥛 Alimentos</option>
-            <option value="embutidos">🥓 Embutidos</option>
-            <option value="golosinas y dulces">🍭 Golosinas y dulces</option>
-            <option value="bazar">🏪 Bazar</option>
-            <option value="utensilios básicos">🍽️ Utensilios básicos</option>
-            <option value="productos para bebe">🍼 Productos para bebé</option>
-            <option value="ferretería">🔧 Ferretería</option>
-          </select>
-        </div>
+<div class="form-grid">
+<div>
+<label>Producto *</label>
+<input id="nombreProducto" required>
+</div>
+<div>
+<label>Categoría *</label>
+<select id="categoria" required>
+<option value="">Seleccione</option>
+<option value="alimentos">Alimentos</option>
+<option value="aseo">Aseo</option>
+<option value="bebidas">Bebidas</option>
+<option value="ferreteria">Ferretería</option>
+</select>
+</div>
+<div>
+<label>Cantidad *</label>
+<input type="number" id="cantidad" min="1" required>
+</div>
+<div>
+<label>Precio USD</label>
+<input type="number" id="precioUnitario" step="0.01">
+</div>
+<div>
+<label>Responsable *</label>
+<input id="responsable" required>
+</div>
+</div>
 
-        <div>
-          <label>Cantidad *</label>
-          <input type="number" id="cantidad" min="1" step="1" placeholder="10" required />
-        </div>
+<button class="btn btn-ingreso" id="btnGuardar">➕ Registrar Ingreso</button>
+</form>
 
-        <div>
-          <label>Precio unitario (USD)</label>
-          <input type="number" id="precioUnitario" min="0" step="0.01" placeholder="1.20" />
-        </div>
+<p class="footer-note">En egresos el precio se toma del último ingreso</p>
+</section>
 
-        <div>
-          <label>Responsable *</label>
-          <input type="text" id="responsable" placeholder="Juan Pérez" required />
-        </div>
+<section class="card">
+<h2>📊 Inventario Actual</h2>
 
-        <div>
-          <label>Características</label>
-          <input type="text" id="caracteristicas" placeholder="Marca Lis, 900g" />
-        </div>
-      </div>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Producto</th>
+<th>Categoría</th>
+<th>Stock</th>
+<th>Estado</th>
+<th>Ingresos</th>
+<th>Egresos</th>
+<th>Responsables</th>
+</tr>
+</thead>
+<tbody id="tablaInventario">
+<tr><td colspan="7" style="text-align:center">Sin datos</td></tr>
+</tbody>
+</table>
+</div>
+</section>
 
-      <button type="submit" class="btn btn-ingreso" id="btnGuardar">
-        ➕ Registrar Ingreso
-      </button>
-    </form>
+<section class="card">
+<h2>📈 Reportes</h2>
+<button class="btn btn-egreso" id="btnReporte">📋 Ver movimientos</button>
+<button class="btn btn-borrar" id="btnBorrarHistorial">🗑️ Borrar todo</button>
 
-    <p class="footer-note">
-      💡 En egresos el precio se calcula automáticamente del último ingreso
-    </p>
-  </section>
+<div class="table-wrapper" id="reporteWrapper" style="display:none">
+<table>
+<thead>
+<tr>
+<th>Fecha</th>
+<th>Tipo</th>
+<th>Producto</th>
+<th>Cant.</th>
+<th>Total USD</th>
+<th>Responsable</th>
+</tr>
+</thead>
+<tbody id="tablaReporte"></tbody>
+</table>
+</div>
+</section>
 
-  <!-- INVENTARIO ACTUAL -->
-  <section class="card">
-    <h2>📊 Inventario Actual</h2>
+<script>
+const STORAGE_KEY="yegni_maik_inventario_v1";
+let movimientos=[];
 
-    <div class="search-row">
-      <input type="text" id="busquedaNombre" placeholder="🔍 Buscar producto..." />
-      <select id="busquedaCategoria">
-        <option value="">Todas categorías</option>
-        <option value="aseo e higiene">🧼 Aseo</option>
-        <option value="jugueteria">🧸 Juguetería</option>
-        <option value="bebidas alcoholicas">🍺 Bebidas</option>
-        <option value="accesorios">💍 Accesorios</option>
-        <option value="papeleria">📝 Papelería</option>
-        <option value="alimentos">🥛 Alimentos</option>
-        <option value="embutidos">🥓 Embutidos</option>
-        <option value="golosinas y dulces">🍭 Golosinas</option>
-        <option value="bazar">🏪 Bazar</option>
-        <option value="utensilios básicos">🍽️ Utensilios</option>
-        <option value="productos para bebe">🍼 Bebé</option>
-        <option value="ferretería">🔧 Ferretería</option>
-      </select>
-    </div>
+function cargarDatos(){
+const data=localStorage.getItem(STORAGE_KEY);
+movimientos=data?JSON.parse(data):[];
+}
 
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Categoría</th>
-            <th>Stock</th>
-            <th>Estado</th>
-            <th>Ingresos</th>
-            <th>Egresos</th>
-            <th>Responsables</th>
-          </tr>
-        </thead>
-        <tbody id="tablaInventario">
-          <tr><td colspan="7" style="text-align:center;padding:20px;color:#999">No hay productos registrados aún</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+function guardarDatos(){
+localStorage.setItem(STORAGE_KEY,JSON.stringify(movimientos));
+}
 
-  <!-- REPORTES -->
-  <section class="card">
-    <h2>📈 Reportes y Gestión</h2>
-    
-    <div class="search-row">
-      <button class="btn btn-egreso" id="btnReporte">📋 Ver movimientos</button>
-      <button class="btn btn-borrar" id="btnBorrarHistorial">🗑️ Borrar historial</button>
-      <button class="btn" style="background:#0056a8;color:#fff" id="btnExportar">📧 Exportar correo</button>
-    </div>
+function calcularInventario(){
+const inv={},resp={},ing={},egr={};
+movimientos.forEach(m=>{
+const k=m.nombre;
+if(!inv[k]){
+inv[k]={...m,stock:0};
+resp[k]=new Set();ing[k]=0;egr[k]=0;
+}
+m.tipo==="INGRESO"? (inv[k].stock+=m.cantidad,ing[k]++):(inv[k].stock-=m.cantidad,egr[k]++);
+resp[k].add(m.responsable);
+});
+return{inv,resp,ing,egr};
+}
 
-    <div class="table-wrapper" id="reporteWrapper" style="display: none">
-      <table>
-        <thead>
-          <tr>
-            <th>Fecha/Hora</th>
-            <th>Tipo</th>
-            <th>Producto</th>
-            <th>Cant.</th>
-            <th>USD</th>
-            <th>Categoría</th>
-            <th>Responsable</th>
-          </tr>
-        </thead>
-        <tbody id="tablaReporte"></tbody>
-      </table>
-    </div>
+function mostrarInventario(){
+const tbody=document.getElementById("tablaInventario");
+tbody.innerHTML="";
+const {inv,resp,ing,egr}=calcularInventario();
+Object.values(inv).forEach(i=>{
+const crit=i.stock<10;
+tbody.innerHTML+=`
+<tr>
+<td>${i.nombre}</td>
+<td>${i.categoria}</td>
+<td class="${crit?"stock-critico":""}">${i.stock}</td>
+<td><span class="pill ${crit?"pill-alta":"pill-ok"}">${crit?"ALERTA":"OK"}</span></td>
+<td>${ing[i.nombre]}</td>
+<td>${egr[i.nombre]}</td>
+<td>${[...resp[i.nombre]].join(", ")}</td>
+</tr>`;
+});
+}
 
-    <p class="footer-note">
-      📧 Los reportes se envían a jhoncuenta2@gmail.com | 🗑️ Borrar historial elimina TODO
-    </p>
-  </section>
+function mostrarReporte(){
+const tbody=document.getElementById("tablaReporte");
+tbody.innerHTML="";
+movimientos.slice().reverse().forEach(m=>{
+tbody.innerHTML+=`
+<tr>
+<td>${new Date(m.fecha).toLocaleString()}</td>
+<td>${m.tipo}</td>
+<td>${m.nombre}</td>
+<td>${m.cantidad}</td>
+<td>$${m.total.toFixed(2)}</td>
+<td>${m.responsable}</td>
+</tr>`;
+});
+}
 
-  <script>
-    const STORAGE_KEY = "yegni_maik_inventario_v1";
-    let movimientos = [];
+function refrescarTablero(){
+mostrarInventario();
+mostrarReporte();
+}
 
-    function hoyISO() {
-      return new Date().toISOString().slice(0, 10);
-    }
+document.getElementById("formMovimiento").onsubmit=e=>{
+e.preventDefault();
+const tipo=tipoMovimiento.value;
+const nombre=nombreProducto.value.trim().toUpperCase();
+const categoria=categoria.value;
+const cantidad=parseInt(cantidad.value);
+const responsable=responsable.value;
+const precio=parseFloat(precioUnitario.value)||0;
 
-    function cargarDatos() {
-      try {
-        const data = localStorage.getItem(STORAGE_KEY);
-        if (data) {
-          movimientos = JSON.parse(data);
-        } else {
-          movimientos = [];
-        }
-      } catch (e) {
-        movimientos = [];
-      }
-      guardarDatos();
-    }
+if(tipo==="EGRESO"){
+const {inv}=calcularInventario();
+if(!inv[nombre]||inv[nombre].stock<cantidad){alert("Stock insuficiente");return;}
+}
 
-    function guardarDatos() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(movimientos));
-    }
+movimientos.push({
+tipo,nombre,categoria,cantidad,
+precio,
+total:precio*cantidad,
+responsable,
+fecha:new Date()
+});
+guardarDatos();
+formMovimiento.reset();
+refrescarTablero();
+};
 
-    function formatearFechaHora(fecha) {
-      const d = new Date(fecha);
-      return d.toLocaleString("es-VE", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-    }
+tabIngreso.onclick=()=>{
+tipoMovimiento.value="INGRESO";
+btnGuardar.textContent="➕ Registrar Ingreso";
+btnGuardar.className="btn btn-ingreso";
+precioUnitario.disabled=false;
+tabIngreso.classList.add("active");
+tabEgreso.classList.remove("active");
+};
 
-    function calcularInventario() {
-      const inventario = {};
-      const responsablesPorProducto = {};
-      const conteoIngresos = {};
-      const conteoEgresos = {};
+tabEgreso.onclick=()=>{
+tipoMovimiento.value="EGRESO";
+btnGuardar.textContent="➖ Registrar Egreso";
+btnGuardar.className="btn btn-egreso";
+precioUnitario.disabled=true;
+tabEgreso.classList.add("active");
+tabIngreso.classList.remove("active");
+};
 
-      movimientos.forEach(m => {
-        const key = m.nombre.toLowerCase();
-        
-        if (!inventario[key]) {
-          inventario[key] = {
-            nombre: m.nombre,
-            categoria: m.categoria,
-            stock: 0,
-            ultimoPrecio: 0
-          };
-          responsablesPorProducto[key] = new Set();
-          conteoIngresos[key] = 0;
-          conteoEgresos[key] = 0;
-        }
+btnReporte.onclick=()=>{
+reporteWrapper.style.display=reporteWrapper.style.display==="block"?"none":"block";
+mostrarReporte();
+};
 
-        if (m.tipo === "INGRESO") {
-          inventario[key].stock += m.cantidad;
-          inventario[key].ultimoPrecio = m.precioUnitario;
-          conteoIngresos[key]++;
-        } else {
-          inventario[key].stock -= m.cantidad;
-          conteoEgresos[key]++;
-        }
-        
-        if (m.responsable) {
-          responsablesPorProducto[key].add(m.responsable);
-        }
-      });
+btnBorrarHistorial.onclick=()=>{
+if(confirm("¿Borrar todo?")){
+movimientos=[];
+guardarDatos();
+refrescarTablero();
+}
+};
 
-      return {
-        inventario,
-        responsablesPorProducto,
-        conteoIngresos,
-        conteoEgresos
-      };
-    }
+document.addEventListener("DOMContentLoaded",()=>{
+cargarDatos();
+refrescarTablero();
+});
+</script>
 
-    function mostrarInventario() {
-      const tbody = document.getElementById("tablaInventario");
-      const filtroNombre = document.getElementById("busquedaNombre").value.toLowerCase();
-      const filtroCat = document.getElementById("busquedaCategoria").value;
-
-      const { inventario, responsablesPorProducto, conteoIngresos, conteoEgresos } = calcularInventario();
-
-      tbody.innerHTML = "";
-
-      if (Object.keys(inventario).length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#999">No hay productos registrados aún</td></tr>';
-        return;
-      }
-
-      Object.keys(inventario)
-        .sort()
-        .forEach(key => {
-          const item = inventario[key];
-          
-          if (filtroNombre && !item.nombre.toLowerCase().includes(filtroNombre)) return;
-          if (filtroCat && item.categoria !== filtroCat) return;
-
-          const responsables = Array.from(responsablesPorProducto[key] || []).join(", ");
-          const esCritico = item.stock < 10;
-          const estado = esCritico 
-            ? '<span class="pill pill-alta">⚠️ ALERTA <10</span>'
-            : '<span class="pill pill-ok">✅ Stock OK</span>';
-
-          const fila = document.createElement("tr");
-          fila.innerHTML = `
-            <td>${item.nombre}</td>
-            <td>${item.categoria}</td>
-            <td class="${esCritico ? 'stock-critico' : ''}">${item.stock}</td>
-            <td>${estado}</td>
-            <td>${conteoIngresos[key] || 0}</td>
-            <td>${conteoEgresos[key] || 0}</td>
-            <td style="font-size:10px">${responsables || '-'}</td>
-          `;
-          tbody.appendChild(fila);
-        });
-    }
-
-    function mostrarReporte() {
-      const tbody = document.getElementById("tablaReporte");
-      tbody.innerHTML = "";
-
-      const movimientosOrdenados = [...movimientos]
-        .sort((a, b) => new Date(b.fechaHora) - new Date(a.fechaHora));
-
-      if (movimientosOrdenados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#999">No hay movimientos</td></tr>';
-        return;
-      }
-
-      movimientosOrdenados.slice(0, 50).forEach(m => {
-        const badge = m.tipo === "INGRESO" 
-          ? '<span class="badge" style="background:var(--azul)">+IN</span>'
-          : '<span class="badge" style="background:var(--naranja)">-EG</span>';
-        
-        const fila = document.createElement("tr");
-        fila.innerHTML = `
-          <td>${formatearFechaHora(m.fechaHora)}</td>
-          <td>${badge}</td>
-          <td>${m.nombre}</td>
-          <td>${m.cantidad}</td>
-          <td>$${m.totalUSD.toFixed(2)}</td>
-          <td>${m.categoria}</td>
-          <td>${m.responsable}</td>
-        `;
-        tbody.appendChild(fila);
-      });
-    }
-
-    function borrarHistorial() {
-      if (confirm("🗑️ ¿Borrar TODO el historial?
-
-Esto eliminará TODOS los movimientos y el inventario quedará en CERO.")) {
-        movimientos = [];
-        guardarDatos();
-        mostrarInventario();
-        mostrarReporte();
-        alert("✅ Historial borrado completamente");
-      }
-    }
-
-    function exportarCorreo() {
-      let texto = "📦 REPORTE INVENTARIO YEGNI-MAIK
-
-";
-      texto += `Fecha: ${new Date().toLocaleDateString("es-VE")}
-
-`;
-      
-      texto += "MOVIMIENTOS RECIENTES:
-" + "─".repeat(40) + "
-";
-      movimientos.slice(-15).reverse().forEach(m => {
-        texto += `${formatearFechaHora(m.fechaHora)} | ${m.tipo} | ${m.nombre} | ${m.cantidad}un | $${m.totalUSD.toFixed(2)} | ${m.responsable}
-`;
-      });
-
-      texto += "
-INVENTARIO ACTUAL:
-" + "─".repeat(40) + "
-";
-      const { inventario } = calcularInventario();
-      Object.entries(inventario).forEach(([key, item]) => {
-        texto += `${item.nombre}: ${item.stock} (${item.categoria})
-`;
-      });
-
-      const email = "jhoncuenta2@gmail.com";
-      const asunto = `Reporte Inventario ${hoyISO()}`;
-      window.location.href = `mailto:${email}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(texto)}`;
-    }
-
-    function registrarMovimiento(e) {
-      e.preventDefault();
-
-      const tipo = document.getElementById("tipoMovimiento").value;
-      const nombre = document.getElementById("nombreProducto").value.trim().toUpperCase();
-      const categoria = document.getElementById("categoria").value;
-      const cantidad = parseInt(document.getElementById("cantidad").value);
-      const responsable = document.getElementById("responsable").value.trim();
-      const precioInput = parseFloat(document.getElementById("precioUnitario").value);
-
-      // VALIDACIONES
-      if (!nombre || !categoria || !cantidad || !responsable) {
-        alert("❌ Complete TODOS los campos obligatorios (*)");
-        return;
-      }
-
-      let precioUnitario;
-      if (tipo === "EGRESO") {
-        const { inventario } = calcularInventario();
-        const itemExistente = inventario[nombre.toLowerCase()];
-        if (!itemExistente || itemExistente.stock < cantidad) {
-          alert(`❌ Stock insuficiente. ${nombre} tiene ${itemExistente?.stock || 0} unidades`);
-          return;
-        }
-        precioUnitario = itemExistente.ultimoPrecio || 0;
-      } else {
-        if (!precioInput || precioInput <= 0) {
-          alert("❌ Ingrese precio unitario válido para INGRESOS");
-          return;
-        }
-        precioUnitario = precioInput;
-      }
-
-      // CREAR MOVIMIENTO
-      const movimiento = {
-        id: Date.now(),
-        tipo,
-        nombre,
-        categoria,
-        cantidad,
-        precioUnitario,
-        totalUSD: precioUnitario * cantidad,
-        responsable,
-        fechaHora: new Date().toISOString()
-      };
-
-      // GUARDAR
-      movimientos.push(movimiento);
-      guardarDatos();
-      
-      // LIMPIAR FORMULARIO
-      document.getElementById("formMovimiento").reset();
-      document.getElementById("categoria").value = "";
-      
-      // ACTUALIZAR VISTAS
-      mostrarInventario();
-      
-      alert(`✅ ${tipo} registrado: ${nombre} x${cantidad}`);
-    }
-
-    // EVENTOS
-    function configurarEventos() {
-      // Tabs
-      document.getElementById("tabIngreso").onclick = () => {
-        document.getElementById("tabIngreso").classList.add("active");
-        document.getElementById("tabEgreso").classList.remove("active");
-        document.getElementById("tipoMovimiento").value = "INGRESO";
-        document.getElementById("btnGuardar").textContent = "➕ Registrar Ingreso";
-        document.getElementById("btnGuardar").className = "btn btn-ingreso";
-        document.getElementById("precioUnitario").disabled = false;
-      };
-
-      document.getElementById("tabEgreso").onclick = () => {
-        document.getElementById("tabEgreso").classList.add("active");
-        document.getElementById("tabIngreso").classList.remove("active");
-        document.getElementById("tipoMovimiento").value = "EGRESO";
-        document.getElementById("btnGuardar").textContent = "➖ Registrar Egreso";
-        document.getElementById("btnGuardar").className = "btn btn-egreso";
-        document.getElementById("precioUnitario").disabled = true;
-      };
-
-      // Botones reporte
-      document.getElementById("btnReporte").onclick = () => {
-        const wrapper = document.getElementById("reporteWrapper");
-        wrapper.style.display = wrapper.style.display === "block" ? "none" : "block";
-        if (wrapper.style.display === "block") mostrarReporte();
-      };
-
-      document.getElementById("btnBorrarHistorial").onclick = borrarHistorial;
-      document.getElementById("btnExportar").onclick = exportarCorreo;
-
-      // Filtros
-      document.getElementById("busquedaNombre").oninput = mostrarInventario;
-      document.getElementById("busquedaCategoria").onchange = mostrarInventario;
-
-      // Formulario
-      document.getElementById("formMovimiento").onsubmit = registrarMovimiento;
-    }
-
-    // INICIO
-    document.addEventListener("DOMContentLoaded", () => {
-      cargarDatos();
-      configurarEventos();
-      mostrarInventario();
-    });
-  </script>
 </body>
 </html>
