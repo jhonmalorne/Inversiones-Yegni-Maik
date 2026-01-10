@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inversiones Yegni-Maik - Sistema de Inventario</title>
+    <title>Inversiones Yegni-Maik - Inventario TIEMPO REAL</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    
     <style>
         :root {
             --primary-color: #2c5f2d;
@@ -40,17 +46,64 @@
             overflow: hidden;
         }
 
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .logo {
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .login-box h2 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            z-index: 1000;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .online { background: #4caf50; color: white; }
+        .offline { background: #f44336; color: white; }
+        .syncing { background: #ff9800; color: white; animation: pulse 1.5s infinite; }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
         .header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             padding: 20px;
             text-align: center;
             position: relative;
-        }
-
-        .logo {
-            height: 60px;
-            margin-bottom: 10px;
         }
 
         .header h1 {
@@ -124,9 +177,7 @@
         }
 
         @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
+            .form-row { grid-template-columns: 1fr; }
         }
 
         .btn {
@@ -154,10 +205,6 @@
         .btn-danger {
             background: var(--danger-color);
             color: white;
-        }
-
-        .btn-danger:hover {
-            background: #b71c1c;
         }
 
         .btn-success {
@@ -203,11 +250,6 @@
             font-weight: 600;
         }
 
-        .low-stock .stock {
-            color: var(--danger-color);
-            font-weight: bold;
-        }
-
         .search-filter {
             margin-bottom: 25px;
             padding: 20px;
@@ -236,26 +278,6 @@
             color: var(--primary-color);
         }
 
-        .history-table {
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                margin: 0;
-                border-radius: 0;
-            }
-            .inventory-table, .history-table {
-                font-size: 0.85rem;
-            }
-            .inventory-table th,
-            .inventory-table td,
-            .history-table th,
-            .history-table td {
-                padding: 10px 8px;
-            }
-        }
-
         .modal {
             display: none;
             position: fixed;
@@ -278,38 +300,43 @@
             overflow-y: auto;
         }
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close:hover {
-            color: black;
-        }
-
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            font-weight: 500;
-        }
-
-        .alert-danger {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+        @media (max-width: 768px) {
+            .container { margin: 0; border-radius: 0; }
+            .inventory-table { font-size: 0.85rem; }
+            .inventory-table th, .inventory-table td { padding: 10px 8px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
+    <!-- PANTALLA DE LOGIN -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-box">
             <img src="logo.png" alt="Logo Yegni-Maik" class="logo" onerror="this.style.display='none'">
+            <h2>🔐 Acceso al Inventario</h2>
+            <div class="form-group">
+                <input type="text" id="username" placeholder="Usuario" value="jhon">
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" placeholder="Contraseña">
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="login()">
+                🚀 ENTRAR AL SISTEMA
+            </button>
+            <p style="margin-top: 20px; color: #666; font-size: 14px;">
+                Usuario: <strong>jhon</strong> | Contraseña: <strong>123456</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- INDICADOR DE CONEXIÓN -->
+    <div class="connection-status online" id="connectionStatus">🟢 Conectado</div>
+
+    <!-- APLICACIÓN PRINCIPAL -->
+    <div class="container" id="mainApp" style="display: none;">
+        <div class="header">
             <h1>Inversiones Yegni-Maik</h1>
-            <p>Sistema de Inventario - Bodega</p>
+            <p>Sistema de Inventario - Bodega (Sincronización en Tiempo Real)</p>
+            <button class="btn btn-secondary" onclick="logout()" style="position: absolute; right: 20px; top: 20px; padding: 8px 16px; font-size: 14px;">🚪 Salir</button>
         </div>
 
         <div class="tabs">
@@ -319,7 +346,7 @@
             <button class="tab-btn" onclick="showTab('historial')">📋 Historial</button>
         </div>
 
-        <!-- Dashboard -->
+        <!-- DASHBOARD -->
         <div id="dashboard" class="tab-content active">
             <div class="stats-grid">
                 <div class="stat-card">
@@ -360,7 +387,7 @@
             </table>
         </div>
 
-        <!-- Ingreso -->
+        <!-- INGRESO -->
         <div id="ingreso" class="tab-content">
             <div class="form-group">
                 <label>Nombre del Producto *</label>
@@ -407,7 +434,7 @@
             <button class="btn btn-primary" onclick="agregarIngreso()">➕ Registrar Ingreso</button>
         </div>
 
-        <!-- Egreso -->
+        <!-- EGRESO -->
         <div id="egreso" class="tab-content">
             <div class="form-group">
                 <label>Seleccionar Producto *</label>
@@ -442,14 +469,14 @@
             <button class="btn btn-primary" onclick="registrarEgreso()">➖ Registrar Egreso</button>
         </div>
 
-        <!-- Historial -->
+        <!-- HISTORIAL -->
         <div id="historial" class="tab-content">
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
                 <button class="btn btn-success" onclick="exportarExcel()">📊 Exportar Excel</button>
                 <button class="btn btn-danger" onclick="mostrarConfirmarBorrar()">🗑️ Borrar Historial</button>
                 <button class="btn btn-secondary" onclick="filtrarHoy()">📅 Solo Hoy</button>
             </div>
-            <table class="inventory-table history-table">
+            <table class="inventory-table">
                 <thead>
                     <tr>
                         <th>Fecha/Hora</th>
@@ -466,10 +493,10 @@
         </div>
     </div>
 
-    <!-- Modal Confirmar Borrar -->
+    <!-- MODAL CONFIRMAR BORRAR -->
     <div id="modalConfirmar" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="cerrarModal()">&times;</span>
+            <span class="close" onclick="cerrarModal()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
             <h2>⚠️ Confirmar Eliminación</h2>
             <p>¿Estás seguro de que deseas borrar todo el historial? Esta acción no se puede deshacer.</p>
             <div style="text-align: right; margin-top: 20px;">
@@ -480,44 +507,106 @@
     </div>
 
     <script>
-        // Datos del inventario y historial (persistente con localStorage)
-        let inventario = JSON.parse(localStorage.getItem('inventarioYegniMaik')) || [];
-        let historial = JSON.parse(localStorage.getItem('historialYegniMaik')) || [];
+        // === CONFIGURACIÓN FIREBASE - REEMPLAZA CON TUS DATOS ===
+        const firebaseConfig = {
+            apiKey: "AIzaSyA1234567890abcdef", // ← CAMBIA ESTO
+            authDomain: "yegnimaik-inventario.firebaseapp.com",
+            databaseURL: "https://yegnimaik-inventario-default-rtdb.firebaseio.com",
+            projectId: "yegnimaik-inventario",
+            storageBucket: "yegnimaik-inventario.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef123456"
+        };
 
-        // Categorías disponibles
-        const categorias = [
-            'Aseo e Higiene', 'Juguetería', 'Bebidas Alcohólicas', 'Accesorios',
-            'Papelería', 'Alimentos', 'Embutidos', 'Golosinas y Dulces', 'Bazar',
-            'Utensilios Básicos', 'Productos para Bebé', 'Ferretería'
-        ];
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const inventarioRef = db.ref('inventario');
+        const historialRef = db.ref('historial');
 
-        // Inicializar la aplicación
-        document.addEventListener('DOMContentLoaded', function() {
-            actualizarDashboard();
-            actualizarHistorial();
-            actualizarSelectProductos();
-            filtrarHoy();
-        });
+        // Variables globales
+        let inventario = [];
+        let historial = [];
+        let onlineStatus = navigator.onLine;
+        let currentUser = null;
 
-        function showTab(tabName) {
-            // Ocultar todos los tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Mostrar tab seleccionado
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-            
-            if (tabName === 'egreso') {
-                actualizarSelectProductos();
+        // === SISTEMA DE LOGIN ===
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'jhon' && password === '123456') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                inicializarApp();
+                alert('✅ Bienvenido al Sistema de Inventario');
+            } else {
+                alert('❌ Usuario o contraseña incorrectos');
             }
         }
 
+        function logout() {
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('username').value = 'jhon';
+            document.getElementById('password').value = '';
+        }
+
+        // Detectar conexión
+        window.addEventListener('online', () => actualizarEstadoConexion(true));
+        window.addEventListener('offline', () => actualizarEstadoConexion(false));
+
+        function actualizarEstadoConexion(conectado) {
+            onlineStatus = conectado;
+            const status = document.getElementById('connectionStatus');
+            if (conectado) {
+                status.textContent = '🟢 Conectado - Sincronizando';
+                status.className = 'connection-status syncing';
+                setTimeout(() => {
+                    status.textContent = '🟢 Conectado';
+                    status.className = 'connection-status online';
+                }, 2000);
+            } else {
+                status.textContent = '🔴 Sin conexión';
+                status.className = 'connection-status offline';
+            }
+        }
+
+        // === SINCRONIZACIÓN EN TIEMPO REAL ===
+        function inicializarApp() {
+            actualizarEstadoConexion(navigator.onLine);
+            
+            // Listener inventario
+            inventarioRef.on('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    inventario = Object.values(snapshot.val() || {});
+                    actualizarDashboard();
+                    actualizarSelectProductos();
+                }
+            });
+
+            // Listener historial
+            historialRef.on('child_added', (snapshot) => {
+                historial.unshift(snapshot.val());
+                actualizarHistorial();
+            });
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'egreso') actualizarSelectProductos();
+        }
+
         function agregarIngreso() {
+            if (!onlineStatus) {
+                alert('❌ Sin conexión a internet');
+                return;
+            }
+
             const producto = document.getElementById('productoIngreso').value.trim();
             const categoria = document.getElementById('categoriaIngreso').value;
             const cantidad = parseInt(document.getElementById('cantidadIngreso').value);
@@ -525,38 +614,36 @@
             const responsable = document.getElementById('responsableIngreso').value.trim();
             const caracteristicas = document.getElementById('caracteristicasIngreso').value.trim();
 
-            // Validaciones
             if (!producto || !categoria || !cantidad || !precio || !responsable) {
-                alert('Por favor completa todos los campos obligatorios');
+                alert('❌ Completa todos los campos obligatorios');
                 return;
             }
 
             if (cantidad < 1) {
-                alert('La cantidad debe ser mayor a 0');
+                alert('❌ Cantidad debe ser mayor a 0');
                 return;
             }
 
-            const fechaHora = new Date().toLocaleString('es-VE', {
-                timeZone: 'America/Caracas',
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
+            const timestamp = Date.now();
+            const fechaHora = new Date().toLocaleString('es-VE');
 
-            // Buscar si el producto ya existe
-            let productoExistente = inventario.find(p => p.nombre.toLowerCase() === producto.toLowerCase());
-
+            // Buscar producto existente
+            const productoExistente = inventario.find(p => p.nombre.toLowerCase() === producto.toLowerCase());
+            
             if (productoExistente) {
-                // Actualizar stock existente
-                productoExistente.stock += cantidad;
-                productoExistente.ingresos += cantidad;
-                productoExistente.ultimoPrecio = precio;
+                // Actualizar existente
+                inventarioRef.orderByChild('nombre').equalTo(producto).once('value', snap => {
+                    snap.forEach(child => {
+                        child.ref.update({
+                            stock: (productoExistente.stock || 0) + cantidad,
+                            ingresos: (productoExistente.ingresos || 0) + cantidad,
+                            ultimoPrecio: precio
+                        });
+                    });
+                });
             } else {
-                // Crear nuevo producto
-                inventario.push({
+                // Crear nuevo
+                inventarioRef.push({
                     nombre: producto,
                     categoria: categoria,
                     stock: cantidad,
@@ -564,13 +651,15 @@
                     ingresos: cantidad,
                     egresos: 0,
                     caracteristicas: caracteristicas || '',
-                    ultimoPrecio: precio
+                    ultimoPrecio: precio,
+                    timestamp: timestamp
                 });
             }
 
-            // Agregar al historial
-            historial.unshift({
+            // Registrar en historial
+            historialRef.push({
                 fecha: fechaHora,
+                timestamp: timestamp,
                 tipo: 'INGRESO',
                 producto: producto,
                 categoria: categoria,
@@ -580,33 +669,18 @@
             });
 
             // Limpiar formulario
-            document.getElementById('productoIngreso').value = '';
-            document.getElementById('categoriaIngreso').value = '';
-            document.getElementById('cantidadIngreso').value = '';
-            document.getElementById('precioIngreso').value = '';
-            document.getElementById('responsableIngreso').value = '';
-            document.getElementById('caracteristicasIngreso').value = '';
-
-            // Guardar en localStorage
-            localStorage.setItem('inventarioYegniMaik', JSON.stringify(inventario));
-            localStorage.setItem('historialYegniMaik', JSON.stringify(historial));
-
-            // Actualizar vistas
-            actualizarDashboard();
-            actualizarHistorial();
-            actualizarSelectProductos();
-
-            alert('✅ Ingreso registrado exitosamente');
+            document.querySelectorAll('#ingreso input, #ingreso select, #ingreso textarea').forEach(el => el.value = '');
+            
+            alert('✅ Ingreso registrado y sincronizado');
         }
 
         function actualizarSelectProductos() {
             const select = document.getElementById('productoEgreso');
             select.innerHTML = '<option value="">Buscar y seleccionar producto...</option>';
-            
             inventario.forEach(producto => {
                 const option = document.createElement('option');
                 option.value = producto.nombre;
-                option.textContent = `${producto.nombre} (${producto.stock} unidades)`;
+                option.textContent = `${producto.nombre} (${producto.stock || 0} unidades)`;
                 select.appendChild(option);
             });
         }
@@ -614,61 +688,54 @@
         function cargarDatosProducto() {
             const nombre = document.getElementById('productoEgreso').value;
             const producto = inventario.find(p => p.nombre === nombre);
-            
             if (producto) {
                 document.getElementById('categoriaEgreso').value = producto.categoria;
-                document.getElementById('stockActual').value = producto.stock;
-                document.getElementById('precioEgreso').value = 0; // Se calculará después
+                document.getElementById('stockActual').value = producto.stock || 0;
             }
         }
 
         function registrarEgreso() {
+            if (!onlineStatus) {
+                alert('❌ Sin conexión a internet');
+                return;
+            }
+
             const nombre = document.getElementById('productoEgreso').value;
             const cantidad = parseInt(document.getElementById('cantidadEgreso').value);
             const responsable = document.getElementById('responsableEgreso').value.trim();
 
-            // Validaciones
             if (!nombre || !cantidad || !responsable) {
-                alert('Por favor completa todos los campos obligatorios');
+                alert('❌ Completa todos los campos');
                 return;
             }
 
             const producto = inventario.find(p => p.nombre === nombre);
-            if (!producto) {
-                alert('Producto no encontrado');
+            if (!producto) return alert('❌ Producto no encontrado');
+
+            if ((producto.stock || 0) < cantidad) {
+                alert(`❌ Stock insuficiente. Disponible: ${producto.stock || 0}`);
                 return;
             }
 
-            if (producto.stock < cantidad) {
-                alert(`❌ Stock insuficiente. Solo hay ${producto.stock} unidades disponibles`);
-                return;
-            }
-
-            if (cantidad < 1) {
-                alert('La cantidad debe ser mayor a 0');
-                return;
-            }
-
-            const precioUnitario = producto.ultimoPrecio || producto.precio;
+            const precioUnitario = producto.ultimoPrecio || producto.precio || 0;
             const precioTotal = precioUnitario * cantidad;
+            const timestamp = Date.now();
+            const fechaHora = new Date().toLocaleString('es-VE');
 
-            const fechaHora = new Date().toLocaleString('es-VE', {
-                timeZone: 'America/Caracas',
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+            // Actualizar stock
+            inventarioRef.orderByChild('nombre').equalTo(nombre).once('value', snap => {
+                snap.forEach(child => {
+                    child.ref.update({
+                        stock: (producto.stock || 0) - cantidad,
+                        egresos: (producto.egresos || 0) + cantidad
+                    });
+                });
             });
 
-            // Actualizar inventario
-            producto.stock -= cantidad;
-            producto.egresos += cantidad;
-
-            // Agregar al historial
-            historial.unshift({
+            // Registrar egreso
+            historialRef.push({
                 fecha: fechaHora,
+                timestamp: timestamp,
                 tipo: 'EGRESO',
                 producto: nombre,
                 categoria: producto.categoria,
@@ -677,28 +744,17 @@
                 responsable: responsable
             });
 
-            // Limpiar formulario
+            // Limpiar
             document.getElementById('cantidadEgreso').value = '';
             document.getElementById('responsableEgreso').value = '';
-            document.getElementById('precioEgreso').value = '';
 
-            // Guardar en localStorage
-            localStorage.setItem('inventarioYegniMaik', JSON.stringify(inventario));
-            localStorage.setItem('historialYegniMaik', JSON.stringify(historial));
-
-            // Actualizar vistas
-            actualizarDashboard();
-            actualizarHistorial();
-            actualizarSelectProductos();
-
-            alert('✅ Egreso registrado exitosamente');
+            alert('✅ Egreso registrado y sincronizado');
         }
 
         function actualizarDashboard() {
-            // Estadísticas
             const totalProductos = inventario.length;
-            const totalStock = inventario.reduce((sum, p) => sum + p.stock, 0);
-            const lowStockCount = inventario.filter(p => p.stock < 10 && p.stock > 0).length;
+            const totalStock = inventario.reduce((sum, p) => sum + (p.stock || 0), 0);
+            const lowStockCount = inventario.filter(p => (p.stock || 0) < 10 && (p.stock || 0) > 0).length;
             const hoy = new Date().toDateString();
             const todayMovements = historial.filter(m => new Date(m.fecha).toDateString() === hoy).length;
 
@@ -707,20 +763,16 @@
             document.getElementById('lowStockCount').textContent = lowStockCount;
             document.getElementById('todayMovements').textContent = todayMovements;
 
-            // Tabla de inventario
             const tbody = document.getElementById('inventoryBody');
             tbody.innerHTML = '';
-
             inventario.forEach(producto => {
                 const row = document.createElement('tr');
-                if (producto.stock < 10 && producto.stock > 0) {
-                    row.classList.add('low-stock');
-                }
+                if ((producto.stock || 0) < 10 && (producto.stock || 0) > 0) row.classList.add('low-stock');
                 row.innerHTML = `
                     <td><strong>${producto.nombre}</strong></td>
                     <td>${producto.categoria}</td>
-                    <td class="stock"><strong>${producto.stock}</strong></td>
-                    <td>$${producto.ultimoPrecio?.toFixed(2) || producto.precio?.toFixed(2) || '0.00'}</td>
+                    <td class="stock"><strong>${producto.stock || 0}</strong></td>
+                    <td>$${((producto.ultimoPrecio || producto.precio || 0).toFixed(2))}</td>
                     <td>${producto.ingresos || 0}</td>
                     <td>${producto.egresos || 0}</td>
                     <td>${producto.caracteristicas || '-'}</td>
@@ -732,7 +784,6 @@
         function filterProducts() {
             const filtro = document.getElementById('searchInput').value.toLowerCase();
             const filas = document.querySelectorAll('#inventoryBody tr');
-            
             filas.forEach(fila => {
                 const nombre = fila.cells[0].textContent.toLowerCase();
                 fila.style.display = nombre.includes(filtro) ? '' : 'none';
@@ -742,21 +793,18 @@
         function actualizarHistorial() {
             const tbody = document.getElementById('historialBody');
             tbody.innerHTML = '';
-
-            historial.slice(0, 100).forEach(movimiento => { // Últimos 100 registros
+            historial.slice(0, 100).forEach(mov => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${movimiento.fecha}</td>
-                    <td>
-                        <span style="color: ${movimiento.tipo === 'INGRESO' ? 'var(--accent-color)' : 'var(--danger-color)'}; font-weight: bold;">
-                            ${movimiento.tipo}
-                        </span>
+                    <td>${mov.fecha}</td>
+                    <td style="color: ${mov.tipo === 'INGRESO' ? 'var(--accent-color)' : 'var(--danger-color)'}; font-weight: bold;">
+                        ${mov.tipo}
                     </td>
-                    <td>${movimiento.producto}</td>
-                    <td>${movimiento.categoria}</td>
-                    <td>${movimiento.cantidad}</td>
-                    <td>$${movimiento.precio.toFixed(2)}</td>
-                    <td>${movimiento.responsable}</td>
+                    <td>${mov.producto}</td>
+                    <td>${mov.categoria}</td>
+                    <td>${mov.cantidad}</td>
+                    <td>$${mov.precio.toFixed(2)}</td>
+                    <td>${mov.responsable}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -765,7 +813,6 @@
         function filtrarHoy() {
             const hoy = new Date().toDateString();
             const filas = document.querySelectorAll('#historialBody tr');
-            
             let count = 0;
             filas.forEach(fila => {
                 const fecha = fila.cells[0].textContent;
@@ -776,31 +823,28 @@
                     fila.style.display = 'none';
                 }
             });
-            
-            if (count === 0) {
-                document.getElementById('historialBody').innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--text-light);">No hay movimientos para hoy</td></tr>';
-            }
         }
 
         function exportarExcel() {
             let csv = 'Fecha,Hora,Tipo,Producto,Categoría,Cantidad,Precio,Responsable\n';
-            historial.forEach(m => {
-                const [fechaCompleta, hora] = m.fecha.split(', ');
-                csv += `"${fechaCompleta}","${hora}","${m.tipo}","${m.producto}","${m.categoria}",${m.cantidad},${m.precio},"${m.responsable}"\n`;
+            historial.slice(0, 1000).forEach(m => {
+                csv += `"${m.fecha}","${m.tipo}","${m.producto}","${m.categoria}",${m.cantidad},${m.precio},"${m.responsable}"\n`;
             });
-
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            link.setAttribute('download', `Historial_Inventario_YegniMaik_${new Date().toISOString().split('T')[0]}.csv`);
+            link.setAttribute('download', `Historial_YegniMaik_${new Date().toISOString().split('T')[0]}.csv`);
             link.style.visibility = 'hidden';
-            document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }
 
         function mostrarConfirmarBorrar() {
+            if (!onlineStatus) {
+                alert('❌ Requiere conexión');
+                return;
+            }
             document.getElementById('modalConfirmar').style.display = 'block';
         }
 
@@ -809,21 +853,23 @@
         }
 
         function borrarHistorial() {
-            if (confirm('¿Estás completamente seguro? Se eliminará TODO el historial.')) {
-                historial = [];
-                localStorage.setItem('historialYegniMaik', JSON.stringify(historial));
-                actualizarHistorial();
+            if (confirm('¿Borrar TODO el historial?')) {
+                historialRef.remove();
                 cerrarModal();
-                alert('✅ Historial eliminado completamente');
+                alert('✅ Historial eliminado');
             }
         }
 
-        // Cerrar modal al hacer clic fuera
+        // Enter en login
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
+                login();
+            }
+        });
+
         window.onclick = function(event) {
             const modal = document.getElementById('modalConfirmar');
-            if (event.target === modal) {
-                cerrarModal();
-            }
+            if (event.target === modal) cerrarModal();
         }
     </script>
 </body>
