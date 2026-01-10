@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Inventario - Inversiones Yegni-Maik</title>
 
-  <!-- Estilos internos -->
   <style>
     :root {
       --azul: #0056a8;
@@ -426,17 +425,17 @@
     </div>
   </section>
 
-  <!-- Reporte diario -->
+  <!-- Historial del día -->
   <section class="card">
-    <h2>Reporte diario</h2>
+    <h2>Historial del día</h2>
 
     <div class="search-row">
-      <button class="btn btn-egreso" id="btnReporte">Ver reporte de hoy</button>
+      <button class="btn btn-egreso" id="btnMostrarHistorial">Ver historial</button>
       <button class="btn btn-borrar" id="btnBorrarHistorial">Borrar historial</button>
-      <button class="btn btn-exportar" id="btnExportar">Exportar historial</button>
+      <button class="btn btn-exportar" id="btnExportarExcel">Exportar Excel</button>
     </div>
 
-    <div class="table-wrapper" id="reporteWrapper" style="display: none">
+    <div class="table-wrapper" id="historialWrapper" style="display:none;">
       <table>
         <thead>
           <tr>
@@ -449,13 +448,13 @@
             <th>Responsable</th>
           </tr>
         </thead>
-        <tbody id="tablaReporte"></tbody>
+        <tbody id="tablaHistorial"></tbody>
       </table>
     </div>
 
     <p class="footer-note">
-      El reporte muestra los movimientos registrados en el día.  
-      Puedes exportar o borrar el historial cuando lo necesites.
+      El sistema guarda los movimientos del día actual.  
+      Puedes borrar o exportar el historial según necesites.
     </p>
   </section>
 
@@ -480,12 +479,10 @@
         guardarEnStorage();
         return;
       }
-
       try {
         const data = JSON.parse(raw);
         state.fechaDia = data.fechaDia || hoy;
         if (state.fechaDia !== hoy) {
-          // nuevo día: se limpia historial pero se conserva estructura
           state.movimientos = [];
           state.fechaDia = hoy;
           guardarEnStorage();
@@ -549,15 +546,13 @@
           inventario[key].stock -= m.cantidad;
           conteoEgresos[key] += 1;
         }
-        if (m.responsable) responsablesPorProducto[key].add(m.responsable);
+
+        if (m.responsable) {
+          responsablesPorProducto[key].add(m.responsable);
+        }
       });
 
-      return {
-        inventario,
-        responsablesPorProducto,
-        conteoIngresos,
-        conteoEgresos
-      };
+      return { inventario, responsablesPorProducto, conteoIngresos, conteoEgresos };
     }
 
     function renderInventario() {
@@ -601,14 +596,12 @@
           responsablesPorProducto[key] || []
         ).join(", ");
 
-        const tr = document.createElement("tr");
-
         const esCritico = item.stock < 10;
-
         const estadoHTML = esCritico
           ? '<span class="pill pill-alta">Alerta &lt; 10</span>'
           : '<span class="pill pill-ok">Stock ok</span>';
 
+        const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${item.nombre}</td>
           <td>${item.categoria}</td>
@@ -618,31 +611,31 @@
           <td>${conteoEgresos[key] || 0}</td>
           <td>${responsables || "-"}</td>
         `;
-
         tbody.appendChild(tr);
       });
     }
 
-    function renderReporte() {
-      const tbody = document.getElementById("tablaReporte");
+    function renderHistorial() {
+      const tbody = document.getElementById("tablaHistorial");
       tbody.innerHTML = "";
 
-      const movimientosOrdenados = [...state.movimientos].sort(
+      const ordenados = [...state.movimientos].sort(
         (a, b) => new Date(b.fechaHora) - new Date(a.fechaHora)
       );
 
-      if (movimientosOrdenados.length === 0) {
+      if (ordenados.length === 0) {
         tbody.innerHTML =
           '<tr><td colspan="7" style="text-align:center;color:#888;padding:10px;">Sin movimientos registrados</td></tr>';
         return;
       }
 
-      movimientosOrdenados.forEach((m) => {
-        const tr = document.createElement("tr");
+      ordenados.forEach((m) => {
         const badge =
           m.tipo === "INGRESO"
             ? '<span class="badge badge-ingreso">Ingreso</span>'
             : '<span class="badge badge-egreso">Egreso</span>';
+
+        const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${formatearFechaHora(m.fechaHora)}</td>
           <td>${badge}</td>
@@ -656,69 +649,62 @@
       });
     }
 
-    function generarTextoReporte() {
-      let texto = "REPORTE DE MOVIMIENTOS - INVERSIONES YEGNI-MAIK
-
-";
-      texto += `Fecha: ${new Date().toLocaleString("es-VE")}
-
-`;
-      if (state.movimientos.length === 0) {
-        texto += "Sin movimientos registrados en el día.
-";
-        return texto;
-      }
-
-      texto += "Movimientos del día:
-";
-      state.movimientos.forEach((m) => {
-        texto += `- ${formatearFechaHora(m.fechaHora)} | ${
-          m.tipo
-        } | ${m.nombre} | Cant: ${m.cantidad} | USD: ${m.totalUSD.toFixed(
-          2
-        )} | Cat: ${m.categoria} | Resp: ${m.responsable}
-`;
-      });
-
-      texto += "
-Inventario actual:
-";
-      const { inventario } = construirInventario();
-      Object.keys(inventario)
-        .sort()
-        .forEach((key) => {
-          const item = inventario[key];
-          texto += `• ${item.nombre}: ${item.stock} (${item.categoria})
-`;
-        });
-
-      return texto;
-    }
-
-    function exportarHistorial() {
-      const email = "jhoncuenta2@gmail.com";
-      const subject = `Reporte inventario Yegni-Maik ${hoyISO()}`;
-      const body = generarTextoReporte();
-      const mailto = `mailto:${email}?subject=${encodeURIComponent(
-        subject
-      )}&body=${encodeURIComponent(body)}`;
-      window.location.href = mailto;
-    }
-
     function borrarHistorial() {
-      if (
-        !confirm(
-          "¿Seguro que desea borrar TODO el historial del día?
-Esta acción no se puede deshacer."
-        )
-      ) {
-        return;
-      }
+      if (!confirm("¿Borrar todos los movimientos del día actual?")) return;
       state.movimientos = [];
       guardarEnStorage();
       renderInventario();
-      renderReporte();
-      alert("Historial del día borrado correctamente.");
+      renderHistorial();
+      alert("Historial borrado correctamente.");
+    }
+
+    // Exportar a CSV (abierto por Excel)
+    function exportarExcel() {
+      if (state.movimientos.length === 0) {
+        alert("No hay movimientos para exportar.");
+        return;
+      }
+
+      const encabezados = [
+        "FechaHora",
+        "Tipo",
+        "Producto",
+        "Cantidad",
+        "PrecioUnitarioUSD",
+        "TotalUSD",
+        "Categoria",
+        "Responsable",
+        "Caracteristicas"
+      ];
+
+      const filas = state.movimientos.map((m) => [
+        formatearFechaHora(m.fechaHora),
+        m.tipo,
+        m.nombre,
+        m.cantidad,
+        m.precioUnitario.toFixed(2),
+        m.totalUSD.toFixed(2),
+        m.categoria,
+        m.responsable,
+        m.caracteristicas || ""
+      ]);
+
+      let csv = encabezados.join(";") + "
+";
+      filas.forEach((fila) => {
+        csv += fila.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(";") + "
+";
+      });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `historial_inventario_${hoyISO()}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     }
 
     function registrarMovimiento(e) {
@@ -786,12 +772,14 @@ Esta acción no se puede deshacer."
       state.movimientos.push(movimiento);
       guardarEnStorage();
       renderInventario();
-
+      // no limpiamos historial, se recarga al abrir
       document.getElementById("formMovimiento").reset();
       document.getElementById("categoria").value = "";
       if (tipo === "INGRESO") {
         document.getElementById("precioUnitario").value = "";
       }
+
+      alert(`Movimiento de ${tipo.toLowerCase()} registrado correctamente.`);
     }
 
     function configurarTabs() {
@@ -824,7 +812,7 @@ Esta acción no se puede deshacer."
       });
     }
 
-    function configurarBusqueda() {
+    function configurarFiltros() {
       document
         .getElementById("busquedaNombre")
         .addEventListener("input", renderInventario);
@@ -833,15 +821,13 @@ Esta acción no se puede deshacer."
         .addEventListener("change", renderInventario);
     }
 
-    function configurarReporte() {
-      const btnReporte = document.getElementById("btnReporte");
-      const wrapper = document.getElementById("reporteWrapper");
-      btnReporte.addEventListener("click", () => {
+    function configurarHistorial() {
+      const btnMostrar = document.getElementById("btnMostrarHistorial");
+      const wrapper = document.getElementById("historialWrapper");
+      btnMostrar.addEventListener("click", () => {
         const visible = wrapper.style.display === "block";
         wrapper.style.display = visible ? "none" : "block";
-        if (!visible) {
-          renderReporte();
-        }
+        if (!visible) renderHistorial();
       });
 
       document
@@ -849,15 +835,15 @@ Esta acción no se puede deshacer."
         .addEventListener("click", borrarHistorial);
 
       document
-        .getElementById("btnExportar")
-        .addEventListener("click", exportarHistorial);
+        .getElementById("btnExportarExcel")
+        .addEventListener("click", exportarExcel);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
       cargarDesdeStorage();
       configurarTabs();
-      configurarBusqueda();
-      configurarReporte();
+      configurarFiltros();
+      configurarHistorial();
       document
         .getElementById("formMovimiento")
         .addEventListener("submit", registrarMovimiento);
