@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Inventario - Inversiones Yegni-Maik</title>
 
-  <!-- Estilos internos -->
   <style>
     :root {
       --azul: #0056a8;
       --azul-oscuro: #003b73;
       --naranja: #f26c21;
       --rojo: #e32026;
-      --amarillo: #f7b500;
       --gris-claro: #f5f5f5;
     }
 
@@ -20,8 +18,7 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
     }
 
     body {
@@ -34,7 +31,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
     }
 
     header img {
@@ -59,20 +56,20 @@
     .card {
       background: #ffffff;
       border-radius: 10px;
-      padding: 10px;
-      margin-bottom: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
     }
 
     .card h2 {
       font-size: 14px;
-      margin-bottom: 6px;
+      margin-bottom: 10px;
       color: var(--azul-oscuro);
     }
 
     .tabs {
       display: flex;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       border-radius: 8px;
       overflow: hidden;
       border: 1px solid var(--azul);
@@ -80,7 +77,7 @@
 
     .tab-btn {
       flex: 1;
-      padding: 8px;
+      padding: 12px;
       text-align: center;
       font-size: 13px;
       cursor: pointer;
@@ -102,117 +99,72 @@
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 6px;
-    }
-
-    .form-grid.full {
-      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
     }
 
     label {
       font-size: 11px;
       color: #555;
       display: block;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
 
-    input,
-    select {
+    input, select {
       width: 100%;
-      padding: 7px;
+      padding: 8px;
       font-size: 12px;
       border-radius: 6px;
       border: 1px solid #ccc;
     }
 
-    input:focus,
-    select:focus {
+    input:focus, select:focus {
       outline: none;
       border-color: var(--azul);
-      box-shadow: 0 0 0 1px rgba(0, 86, 168, 0.1);
+      box-shadow: 0 0 0 2px rgba(0, 86, 168, 0.1);
     }
 
     .btn {
       width: 100%;
-      padding: 8px;
+      padding: 12px;
       border-radius: 6px;
       border: none;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 6px;
       color: #ffffff;
     }
 
-    .btn-ingreso {
-      background: var(--azul);
-    }
+    .btn-ingreso { background: var(--azul); }
+    .btn-egreso { background: var(--naranja); }
+    .btn-borrar { background: var(--rojo); }
 
-    .btn-egreso {
-      background: var(--naranja);
-    }
-
-    .btn-borrar {
-      background: var(--rojo);
-    }
-
-    .btn:hover {
-      opacity: 0.9;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 6px;
-      border-radius: 999px;
-      font-size: 10px;
-      color: #ffffff;
-    }
-
-    .badge-ingreso {
-      background: var(--azul);
-    }
-
-    .badge-egreso {
-      background: var(--naranja);
-    }
-
-    .badge-critico {
-      background: var(--rojo);
-    }
+    .btn:hover { opacity: 0.9; }
 
     .search-row {
       display: flex;
       gap: 8px;
-      margin-top: 6px;
+      margin-bottom: 10px;
       flex-wrap: wrap;
     }
 
-    .search-row input {
-      flex: 1;
-    }
-
-    .search-row select {
-      min-width: 120px;
-    }
-
-    .search-row .btn {
-      flex: none;
-      width: auto;
-      padding: 8px 12px;
+    .search-row input { flex: 1; }
+    .search-row select { min-width: 130px; }
+    .search-row .btn { 
+      flex: none; 
+      width: auto; 
+      padding: 10px 15px; 
       font-size: 12px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 8px;
-      font-size: 11px;
+      font-size: 12px;
     }
 
-    th,
-    td {
-      padding: 6px 4px;
+    th, td {
+      padding: 8px 6px;
       border-bottom: 1px solid #eee;
       text-align: left;
     }
@@ -222,82 +174,75 @@
       position: sticky;
       top: 0;
       z-index: 1;
+      font-weight: 600;
     }
 
     .table-wrapper {
-      max-height: 260px;
+      max-height: 300px;
       overflow-y: auto;
       border-radius: 8px;
       border: 1px solid #eee;
-      margin-top: 6px;
+      margin-top: 10px;
     }
 
     .stock-critico {
       color: var(--rojo);
       font-weight: 700;
+      font-size: 14px;
     }
 
     .pill {
-      padding: 2px 6px;
-      border-radius: 999px;
-      border: 1px solid #ddd;
+      padding: 3px 8px;
+      border-radius: 20px;
+      border: 1px solid;
       font-size: 10px;
-      background: #fff;
+      font-weight: 600;
     }
 
     .pill-alta {
       border-color: var(--rojo);
       color: var(--rojo);
+      background: rgba(227, 32, 38, 0.1);
     }
 
     .pill-ok {
       border-color: var(--azul);
       color: var(--azul);
+      background: rgba(0, 86, 168, 0.1);
     }
 
     .footer-note {
-      margin-top: 8px;
-      font-size: 10px;
+      margin-top: 10px;
+      font-size: 11px;
       color: #777;
+      line-height: 1.4;
     }
 
     @media (max-width: 600px) {
-      header h1 {
-        font-size: 16px;
-      }
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-      th:nth-child(5),
-      td:nth-child(5),
-      th:nth-child(6),
-      td:nth-child(6),
-      th:nth-child(7),
-      td:nth-child(7) {
-        display: none;
-      }
-      .search-row {
-        flex-direction: column;
-      }
+      .form-grid { grid-template-columns: 1fr; }
+      .search-row { flex-direction: column; }
+      th:nth-child(5), td:nth-child(5),
+      th:nth-child(6), td:nth-child(6),
+      th:nth-child(7), td:nth-child(7) { display: none; }
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Logo Inversiones Yegni-Maik" />
+    <img src="logo.png" alt="Logo Yegni-Maik" />
     <div class="title-block">
       <h1>Inversiones Yegni-Maik</h1>
-      <span>Sistema interno de inventario de almacén</span>
+      <span>Sistema de Inventario - Almacén</span>
     </div>
   </header>
 
-  <!-- Formulario de movimiento -->
+  <!-- FORMULARIO MOVIMIENTOS -->
   <section class="card">
-    <h2>Movimiento de inventario</h2>
+    <h2>📦 Movimiento de Inventario</h2>
 
     <div class="tabs">
-      <button class="tab-btn active" id="tabIngreso">Ingreso</button>
-      <button class="tab-btn egreso" id="tabEgreso">Egreso</button>
+      <button class="tab-btn active" id="tabIngreso">➕ Ingreso</button>
+      <button class="tab-btn egreso" id="tabEgreso">➖ Egreso</button>
     </div>
 
     <form id="formMovimiento">
@@ -305,112 +250,80 @@
 
       <div class="form-grid">
         <div>
-          <label for="nombreProducto">Producto</label>
-          <input
-            type="text"
-            id="nombreProducto"
-            placeholder="Nombre del producto"
-            required
-          />
+          <label>Producto *</label>
+          <input type="text" id="nombreProducto" placeholder="Harina Pan 900g" required />
         </div>
 
         <div>
-          <label for="categoria">Categoría</label>
+          <label>Categoría *</label>
           <select id="categoria" required>
-            <option value="">Seleccione</option>
-            <option value="aseo e higiene">Aseo e higiene</option>
-            <option value="jugueteria">Juguetería</option>
-            <option value="bebidas alcoholicas">Bebidas alcohólicas</option>
-            <option value="accesorios">Accesorios</option>
-            <option value="papeleria">Papelería</option>
-            <option value="alimentos">Alimentos</option>
-            <option value="embutidos">Embutidos</option>
-            <option value="golosinas y dulces">Golosinas y dulces</option>
-            <option value="bazar">Bazar</option>
-            <option value="utensilios básicos">Utensilios básicos</option>
-            <option value="productos para bebe">Productos para bebé</option>
-            <option value="ferretería">Ferretería</option>
+            <option value="">Seleccione...</option>
+            <option value="aseo e higiene">🧼 Aseo e higiene</option>
+            <option value="jugueteria">🧸 Juguetería</option>
+            <option value="bebidas alcoholicas">🍺 Bebidas alcohólicas</option>
+            <option value="accesorios">💍 Accesorios</option>
+            <option value="papeleria">📝 Papelería</option>
+            <option value="alimentos">🥛 Alimentos</option>
+            <option value="embutidos">🥓 Embutidos</option>
+            <option value="golosinas y dulces">🍭 Golosinas y dulces</option>
+            <option value="bazar">🏪 Bazar</option>
+            <option value="utensilios básicos">🍽️ Utensilios básicos</option>
+            <option value="productos para bebe">🍼 Productos para bebé</option>
+            <option value="ferretería">🔧 Ferretería</option>
           </select>
         </div>
 
         <div>
-          <label for="cantidad">Cantidad</label>
-          <input
-            type="number"
-            id="cantidad"
-            min="1"
-            step="1"
-            placeholder="Unidades"
-            required
-          />
+          <label>Cantidad *</label>
+          <input type="number" id="cantidad" min="1" step="1" placeholder="10" required />
         </div>
 
         <div>
-          <label for="precioUnitario">Precio unitario (USD)</label>
-          <input
-            type="number"
-            id="precioUnitario"
-            min="0"
-            step="0.01"
-            placeholder="Solo para ingreso"
-          />
+          <label>Precio unitario (USD)</label>
+          <input type="number" id="precioUnitario" min="0" step="0.01" placeholder="1.20" />
         </div>
 
         <div>
-          <label for="responsable">Responsable</label>
-          <input
-            type="text"
-            id="responsable"
-            placeholder="Nombre y apellido"
-            required
-          />
+          <label>Responsable *</label>
+          <input type="text" id="responsable" placeholder="Juan Pérez" required />
         </div>
 
         <div>
-          <label for="caracteristicas">Características</label>
-          <input
-            type="text"
-            id="caracteristicas"
-            placeholder="Marca, presentación, detalle"
-          />
+          <label>Características</label>
+          <input type="text" id="caracteristicas" placeholder="Marca Lis, 900g" />
         </div>
       </div>
 
       <button type="submit" class="btn btn-ingreso" id="btnGuardar">
-        Registrar ingreso
+        ➕ Registrar Ingreso
       </button>
     </form>
 
     <p class="footer-note">
-      Los montos en dólares se calculan automáticamente en los egresos según el
-      precio unitario registrado en el último ingreso del producto.
+      💡 En egresos el precio se calcula automáticamente del último ingreso
     </p>
   </section>
 
-  <!-- Resumen y búsqueda -->
+  <!-- INVENTARIO ACTUAL -->
   <section class="card">
-    <h2>Inventario y búsqueda</h2>
+    <h2>📊 Inventario Actual</h2>
 
     <div class="search-row">
-      <input
-        type="text"
-        id="busquedaNombre"
-        placeholder="Buscar producto por nombre"
-      />
+      <input type="text" id="busquedaNombre" placeholder="🔍 Buscar producto..." />
       <select id="busquedaCategoria">
-        <option value="">Todas las categorías</option>
-        <option value="aseo e higiene">Aseo e higiene</option>
-        <option value="jugueteria">Juguetería</option>
-        <option value="bebidas alcoholicas">Bebidas alcohólicas</option>
-        <option value="accesorios">Accesorios</option>
-        <option value="papeleria">Papelería</option>
-        <option value="alimentos">Alimentos</option>
-        <option value="embutidos">Embutidos</option>
-        <option value="golosinas y dulces">Golosinas y dulces</option>
-        <option value="bazar">Bazar</option>
-        <option value="utensilios básicos">Utensilios básicos</option>
-        <option value="productos para bebe">Productos para bebé</option>
-        <option value="ferretería">Ferretería</option>
+        <option value="">Todas categorías</option>
+        <option value="aseo e higiene">🧼 Aseo</option>
+        <option value="jugueteria">🧸 Juguetería</option>
+        <option value="bebidas alcoholicas">🍺 Bebidas</option>
+        <option value="accesorios">💍 Accesorios</option>
+        <option value="papeleria">📝 Papelería</option>
+        <option value="alimentos">🥛 Alimentos</option>
+        <option value="embutidos">🥓 Embutidos</option>
+        <option value="golosinas y dulces">🍭 Golosinas</option>
+        <option value="bazar">🏪 Bazar</option>
+        <option value="utensilios básicos">🍽️ Utensilios</option>
+        <option value="productos para bebe">🍼 Bebé</option>
+        <option value="ferretería">🔧 Ferretería</option>
       </select>
     </div>
 
@@ -427,28 +340,28 @@
             <th>Responsables</th>
           </tr>
         </thead>
-        <tbody id="tablaInventario"></tbody>
+        <tbody id="tablaInventario">
+          <tr><td colspan="7" style="text-align:center;padding:20px;color:#999">No hay productos registrados aún</td></tr>
+        </tbody>
       </table>
     </div>
   </section>
 
-  <!-- Reporte diario -->
+  <!-- REPORTES -->
   <section class="card">
-    <h2>Reporte diario</h2>
+    <h2>📈 Reportes y Gestión</h2>
     
     <div class="search-row">
-      <button class="btn btn-egreso" id="btnReporte">Ver reporte de hoy</button>
-      <button class="btn btn-borrar" id="btnBorrarHistorial">Borrar historial</button>
-      <button class="btn" style="background:#0056a8;color:#fff" id="btnExportar">
-        Exportar por correo
-      </button>
+      <button class="btn btn-egreso" id="btnReporte">📋 Ver movimientos</button>
+      <button class="btn btn-borrar" id="btnBorrarHistorial">🗑️ Borrar historial</button>
+      <button class="btn" style="background:#0056a8;color:#fff" id="btnExportar">📧 Exportar correo</button>
     </div>
 
     <div class="table-wrapper" id="reporteWrapper" style="display: none">
       <table>
         <thead>
           <tr>
-            <th>Fecha / Hora</th>
+            <th>Fecha/Hora</th>
             <th>Tipo</th>
             <th>Producto</th>
             <th>Cant.</th>
@@ -462,70 +375,62 @@
     </div>
 
     <p class="footer-note">
-      El reporte muestra los movimientos. Usa "Borrar historial" para limpiar todo cuando lo necesites.
+      📧 Los reportes se envían a jhoncuenta2@gmail.com | 🗑️ Borrar historial elimina TODO
     </p>
   </section>
 
   <script>
     const STORAGE_KEY = "yegni_maik_inventario_v1";
-
-    let movimientos = []; // Variable global para los movimientos
+    let movimientos = [];
 
     function hoyISO() {
-      const hoy = new Date();
-      return hoy.toISOString().slice(0, 10);
+      return new Date().toISOString().slice(0, 10);
     }
 
-    function cargarDesdeStorage() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        movimientos = [];
-        guardarEnStorage();
-        return;
-      }
-
+    function cargarDatos() {
       try {
-        const data = JSON.parse(raw);
-        movimientos = Array.isArray(data.movimientos) ? data.movimientos : [];
+        const data = localStorage.getItem(STORAGE_KEY);
+        if (data) {
+          movimientos = JSON.parse(data);
+        } else {
+          movimientos = [];
+        }
       } catch (e) {
         movimientos = [];
-        guardarEnStorage();
       }
+      guardarDatos();
     }
 
-    function guardarEnStorage() {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          movimientos: movimientos
-        })
-      );
+    function guardarDatos() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(movimientos));
     }
 
     function formatearFechaHora(fecha) {
       const d = new Date(fecha);
-      const dia = d.toLocaleDateString("es-VE");
-      const hora = d.toLocaleTimeString("es-VE", {
+      return d.toLocaleString("es-VE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
         hour: "2-digit",
-        minute: "2-digit",
+        minute: "2-digit"
       });
-      return `${dia} ${hora}`;
     }
 
-    function construirInventario() {
+    function calcularInventario() {
       const inventario = {};
       const responsablesPorProducto = {};
       const conteoIngresos = {};
       const conteoEgresos = {};
 
-      movimientos.forEach((m) => {
+      movimientos.forEach(m => {
         const key = m.nombre.toLowerCase();
+        
         if (!inventario[key]) {
           inventario[key] = {
             nombre: m.nombre,
             categoria: m.categoria,
             stock: 0,
-            ultimoPrecio: 0,
+            ultimoPrecio: 0
           };
           responsablesPorProducto[key] = new Set();
           conteoIngresos[key] = 0;
@@ -535,211 +440,175 @@
         if (m.tipo === "INGRESO") {
           inventario[key].stock += m.cantidad;
           inventario[key].ultimoPrecio = m.precioUnitario;
-          conteoIngresos[key] += 1;
+          conteoIngresos[key]++;
         } else {
           inventario[key].stock -= m.cantidad;
-          conteoEgresos[key] += 1;
+          conteoEgresos[key]++;
         }
-        if (m.responsable) responsablesPorProducto[key].add(m.responsable);
+        
+        if (m.responsable) {
+          responsablesPorProducto[key].add(m.responsable);
+        }
       });
 
       return {
         inventario,
         responsablesPorProducto,
         conteoIngresos,
-        conteoEgresos,
+        conteoEgresos
       };
     }
 
-    function renderInventario() {
+    function mostrarInventario() {
       const tbody = document.getElementById("tablaInventario");
-      tbody.innerHTML = "";
-
-      const filtroNombre = document
-        .getElementById("busquedaNombre")
-        .value.toLowerCase();
+      const filtroNombre = document.getElementById("busquedaNombre").value.toLowerCase();
       const filtroCat = document.getElementById("busquedaCategoria").value;
 
-      const {
-        inventario,
-        responsablesPorProducto,
-        conteoIngresos,
-        conteoEgresos,
-      } = construirInventario();
+      const { inventario, responsablesPorProducto, conteoIngresos, conteoEgresos } = calcularInventario();
+
+      tbody.innerHTML = "";
+
+      if (Object.keys(inventario).length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#999">No hay productos registrados aún</td></tr>';
+        return;
+      }
 
       Object.keys(inventario)
         .sort()
-        .forEach((key) => {
+        .forEach(key => {
           const item = inventario[key];
+          
+          if (filtroNombre && !item.nombre.toLowerCase().includes(filtroNombre)) return;
+          if (filtroCat && item.categoria !== filtroCat) return;
 
-          if (
-            filtroNombre &&
-            !item.nombre.toLowerCase().includes(filtroNombre)
-          ) {
-            return;
-          }
-          if (filtroCat && item.categoria !== filtroCat) {
-            return;
-          }
-
-          const responsables = Array.from(
-            responsablesPorProducto[key] || []
-          ).join(", ");
-
-          const tr = document.createElement("tr");
-
+          const responsables = Array.from(responsablesPorProducto[key] || []).join(", ");
           const esCritico = item.stock < 10;
+          const estado = esCritico 
+            ? '<span class="pill pill-alta">⚠️ ALERTA <10</span>'
+            : '<span class="pill pill-ok">✅ Stock OK</span>';
 
-          const estadoHTML = esCritico
-            ? '<span class="pill pill-alta">Alerta &lt; 10</span>'
-            : '<span class="pill pill-ok">Stock ok</span>';
-
-          tr.innerHTML = `
+          const fila = document.createElement("tr");
+          fila.innerHTML = `
             <td>${item.nombre}</td>
             <td>${item.categoria}</td>
-            <td class="${esCritico ? "stock-critico" : ""}">${item.stock}</td>
-            <td>${estadoHTML}</td>
+            <td class="${esCritico ? 'stock-critico' : ''}">${item.stock}</td>
+            <td>${estado}</td>
             <td>${conteoIngresos[key] || 0}</td>
             <td>${conteoEgresos[key] || 0}</td>
-            <td>${responsables || "-"}</td>
+            <td style="font-size:10px">${responsables || '-'}</td>
           `;
-
-          tbody.appendChild(tr);
+          tbody.appendChild(fila);
         });
     }
 
-    function renderReporte() {
+    function mostrarReporte() {
       const tbody = document.getElementById("tablaReporte");
       tbody.innerHTML = "";
 
-      const movimientosOrdenados = [...movimientos].sort(
-        (a, b) => new Date(b.fechaHora) - new Date(a.fechaHora)
-      );
+      const movimientosOrdenados = [...movimientos]
+        .sort((a, b) => new Date(b.fechaHora) - new Date(a.fechaHora));
 
-      movimientosOrdenados.forEach((m) => {
-        const tr = document.createElement("tr");
-        const badge =
-          m.tipo === "INGRESO"
-            ? '<span class="badge badge-ingreso">Ingreso</span>'
-            : '<span class="badge badge-egreso">Egreso</span>';
-        tr.innerHTML = `
+      if (movimientosOrdenados.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#999">No hay movimientos</td></tr>';
+        return;
+      }
+
+      movimientosOrdenados.slice(0, 50).forEach(m => {
+        const badge = m.tipo === "INGRESO" 
+          ? '<span class="badge" style="background:var(--azul)">+IN</span>'
+          : '<span class="badge" style="background:var(--naranja)">-EG</span>';
+        
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
           <td>${formatearFechaHora(m.fechaHora)}</td>
           <td>${badge}</td>
           <td>${m.nombre}</td>
           <td>${m.cantidad}</td>
-          <td>${m.totalUSD.toFixed(2)}</td>
+          <td>$${m.totalUSD.toFixed(2)}</td>
           <td>${m.categoria}</td>
-          <td>${m.responsable || "-"}</td>
+          <td>${m.responsable}</td>
         `;
-        tbody.appendChild(tr);
+        tbody.appendChild(fila);
       });
     }
 
     function borrarHistorial() {
-      if (!confirm("¿Seguro que desea BORRAR TODO el historial de movimientos? Esto eliminará TODOS los registros de ingresos y egresos.")) {
-        return;
+      if (confirm("🗑️ ¿Borrar TODO el historial?
+
+Esto eliminará TODOS los movimientos y el inventario quedará en CERO.")) {
+        movimientos = [];
+        guardarDatos();
+        mostrarInventario();
+        mostrarReporte();
+        alert("✅ Historial borrado completamente");
       }
-      
-      movimientos = [];
-      guardarEnStorage();
-      renderInventario();
-      renderReporte();
-      alert("✅ Historial borrado completamente");
     }
 
-    function generarTextoReporte() {
-      let texto = "=== REPORTE DE INVENTARIO YEGNI-MAIK ===
+    function exportarCorreo() {
+      let texto = "📦 REPORTE INVENTARIO YEGNI-MAIK
 
 ";
       texto += `Fecha: ${new Date().toLocaleDateString("es-VE")}
 
 `;
       
-      texto += "ÚLTIMOS MOVIMIENTOS:
+      texto += "MOVIMIENTOS RECIENTES:
+" + "─".repeat(40) + "
 ";
-      texto += "-".repeat(50) + "
-";
-      
-      const ultimos = movimientos.slice(-20).reverse();
-      ultimos.forEach(m => {
-        texto += `${formatearFechaHora(m.fechaHora)} | ${m.tipo} | ${m.nombre} | Cant: ${m.cantidad} | USD: $${m.totalUSD.toFixed(2)} | ${m.responsable}
+      movimientos.slice(-15).reverse().forEach(m => {
+        texto += `${formatearFechaHora(m.fechaHora)} | ${m.tipo} | ${m.nombre} | ${m.cantidad}un | $${m.totalUSD.toFixed(2)} | ${m.responsable}
 `;
       });
-      
-      texto += "
-" + "-".repeat(50) + "
-";
-      texto += "INVENTARIO ACTUAL:
-";
-      
-      const { inventario } = construirInventario();
-      Object.keys(inventario).sort().forEach(key => {
-        const item = inventario[key];
-        texto += `${item.nombre}: ${item.stock} und (${item.categoria})
-`;
-      });
-      
-      return texto;
-    }
 
-    function exportarPorCorreo() {
+      texto += "
+INVENTARIO ACTUAL:
+" + "─".repeat(40) + "
+";
+      const { inventario } = calcularInventario();
+      Object.entries(inventario).forEach(([key, item]) => {
+        texto += `${item.nombre}: ${item.stock} (${item.categoria})
+`;
+      });
+
       const email = "jhoncuenta2@gmail.com";
-      const subject = `Reporte Inventario Yegni-Maik ${hoyISO()}`;
-      const body = generarTextoReporte();
-      const link = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      window.location.href = link;
+      const asunto = `Reporte Inventario ${hoyISO()}`;
+      window.location.href = `mailto:${email}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(texto)}`;
     }
 
     function registrarMovimiento(e) {
       e.preventDefault();
 
       const tipo = document.getElementById("tipoMovimiento").value;
-      const nombre = document
-        .getElementById("nombreProducto")
-        .value.trim()
-        .toUpperCase();
+      const nombre = document.getElementById("nombreProducto").value.trim().toUpperCase();
       const categoria = document.getElementById("categoria").value;
-      const cantidad = parseInt(
-        document.getElementById("cantidad").value,
-        10
-      );
-      const responsable = document
-        .getElementById("responsable")
-        .value.trim();
-      const caracteristicas = document
-        .getElementById("caracteristicas")
-        .value.trim();
+      const cantidad = parseInt(document.getElementById("cantidad").value);
+      const responsable = document.getElementById("responsable").value.trim();
+      const precioInput = parseFloat(document.getElementById("precioUnitario").value);
 
+      // VALIDACIONES
       if (!nombre || !categoria || !cantidad || !responsable) {
-        alert("❌ Complete todos los campos obligatorios");
+        alert("❌ Complete TODOS los campos obligatorios (*)");
         return;
       }
 
       let precioUnitario;
-      
       if (tipo === "EGRESO") {
-        const { inventario } = construirInventario();
-        const key = nombre.toLowerCase();
-        const item = inventario[key];
-        if (!item || item.stock < cantidad) {
-          alert(
-            "❌ No hay stock suficiente o el producto no tiene ingresos registrados."
-          );
+        const { inventario } = calcularInventario();
+        const itemExistente = inventario[nombre.toLowerCase()];
+        if (!itemExistente || itemExistente.stock < cantidad) {
+          alert(`❌ Stock insuficiente. ${nombre} tiene ${itemExistente?.stock || 0} unidades`);
           return;
         }
-        precioUnitario = item.ultimoPrecio || 0;
+        precioUnitario = itemExistente.ultimoPrecio || 0;
       } else {
-        precioUnitario = parseFloat(
-          document.getElementById("precioUnitario").value
-        );
-        if (isNaN(precioUnitario) || precioUnitario <= 0) {
-          alert("❌ Ingrese precio unitario válido para ingresos");
+        if (!precioInput || precioInput <= 0) {
+          alert("❌ Ingrese precio unitario válido para INGRESOS");
           return;
         }
+        precioUnitario = precioInput;
       }
 
-      const totalUSD = precioUnitario * cantidad;
-
+      // CREAR MOVIMIENTO
       const movimiento = {
         id: Date.now(),
         tipo,
@@ -747,98 +616,69 @@
         categoria,
         cantidad,
         precioUnitario,
-        totalUSD,
+        totalUSD: precioUnitario * cantidad,
         responsable,
-        caracteristicas,
-        fechaHora: new Date().toISOString(),
+        fechaHora: new Date().toISOString()
       };
 
-      // AGREGAR AL ARRAY GLOBAL
+      // GUARDAR
       movimientos.push(movimiento);
-      guardarEnStorage();
+      guardarDatos();
       
-      // REFRESCAR TABLAS
-      renderInventario();
-
       // LIMPIAR FORMULARIO
       document.getElementById("formMovimiento").reset();
       document.getElementById("categoria").value = "";
-      if (tipo === "INGRESO") {
-        document.getElementById("precioUnitario").value = "";
-      }
-
-      alert("✅ Movimiento registrado correctamente. Stock actualizado.");
-    }
-
-    function configurarTabs() {
-      const tabIngreso = document.getElementById("tabIngreso");
-      const tabEgreso = document.getElementById("tabEgreso");
-      const tipoInput = document.getElementById("tipoMovimiento");
-      const btnGuardar = document.getElementById("btnGuardar");
-      const precioInput = document.getElementById("precioUnitario");
-
-      tabIngreso.addEventListener("click", () => {
-        tabIngreso.classList.add("active");
-        tabEgreso.classList.remove("active");
-        tipoInput.value = "INGRESO";
-        btnGuardar.textContent = "Registrar ingreso";
-        btnGuardar.classList.remove("btn-egreso");
-        btnGuardar.classList.add("btn-ingreso");
-        precioInput.disabled = false;
-        precioInput.placeholder = "Precio unitario (USD)";
-      });
-
-      tabEgreso.addEventListener("click", () => {
-        tabEgreso.classList.add("active");
-        tabIngreso.classList.remove("active");
-        tipoInput.value = "EGRESO";
-        btnGuardar.textContent = "Registrar egreso";
-        btnGuardar.classList.remove("btn-ingreso");
-        btnGuardar.classList.add("btn-egreso");
-        precioInput.disabled = true;
-        precioInput.placeholder = "Se usa el último precio registrado";
-        precioInput.value = "";
-      });
-    }
-
-    function configurarBusqueda() {
-      document
-        .getElementById("busquedaNombre")
-        .addEventListener("input", renderInventario);
-      document
-        .getElementById("busquedaCategoria")
-        .addEventListener("change", renderInventario);
-    }
-
-    function configurarReporte() {
-      const btnReporte = document.getElementById("btnReporte");
-      const wrapper = document.getElementById("reporteWrapper");
       
-      btnReporte.addEventListener("click", () => {
-        const visible = wrapper.style.display === "block";
-        wrapper.style.display = visible ? "none" : "block";
-        if (!visible) {
-          renderReporte();
-        }
-      });
-
-      document.getElementById("btnBorrarHistorial")
-        .addEventListener("click", borrarHistorial);
-
-      document.getElementById("btnExportar")
-        .addEventListener("click", exportarPorCorreo);
+      // ACTUALIZAR VISTAS
+      mostrarInventario();
+      
+      alert(`✅ ${tipo} registrado: ${nombre} x${cantidad}`);
     }
 
-    // INICIALIZACIÓN
+    // EVENTOS
+    function configurarEventos() {
+      // Tabs
+      document.getElementById("tabIngreso").onclick = () => {
+        document.getElementById("tabIngreso").classList.add("active");
+        document.getElementById("tabEgreso").classList.remove("active");
+        document.getElementById("tipoMovimiento").value = "INGRESO";
+        document.getElementById("btnGuardar").textContent = "➕ Registrar Ingreso";
+        document.getElementById("btnGuardar").className = "btn btn-ingreso";
+        document.getElementById("precioUnitario").disabled = false;
+      };
+
+      document.getElementById("tabEgreso").onclick = () => {
+        document.getElementById("tabEgreso").classList.add("active");
+        document.getElementById("tabIngreso").classList.remove("active");
+        document.getElementById("tipoMovimiento").value = "EGRESO";
+        document.getElementById("btnGuardar").textContent = "➖ Registrar Egreso";
+        document.getElementById("btnGuardar").className = "btn btn-egreso";
+        document.getElementById("precioUnitario").disabled = true;
+      };
+
+      // Botones reporte
+      document.getElementById("btnReporte").onclick = () => {
+        const wrapper = document.getElementById("reporteWrapper");
+        wrapper.style.display = wrapper.style.display === "block" ? "none" : "block";
+        if (wrapper.style.display === "block") mostrarReporte();
+      };
+
+      document.getElementById("btnBorrarHistorial").onclick = borrarHistorial;
+      document.getElementById("btnExportar").onclick = exportarCorreo;
+
+      // Filtros
+      document.getElementById("busquedaNombre").oninput = mostrarInventario;
+      document.getElementById("busquedaCategoria").onchange = mostrarInventario;
+
+      // Formulario
+      document.getElementById("formMovimiento").onsubmit = registrarMovimiento;
+    }
+
+    // INICIO
     document.addEventListener("DOMContentLoaded", () => {
-      cargarDesdeStorage();
-      configurarTabs();
-      configurarBusqueda();
-      configurarReporte();
-      document
-        .getElementById("formMovimiento")
-        .addEventListener("submit", registrarMovimiento);
-      renderInventario();
+      cargarDatos();
+      configurarEventos();
+      mostrarInventario();
     });
   </script>
 </body>
