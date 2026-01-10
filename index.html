@@ -261,16 +261,6 @@
       color: #777;
     }
 
-    .contador-dias {
-      background: var(--amarillo);
-      color: var(--azul-oscuro);
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 600;
-      margin-top: 6px;
-    }
-
     @media (max-width: 600px) {
       header h1 {
         font-size: 16px;
@@ -454,10 +444,6 @@
       </button>
     </div>
 
-    <div class="contador-dias" id="contadorDias">
-      Cargando contador de días...
-    </div>
-
     <div class="table-wrapper" id="reporteWrapper" style="display: none">
       <table>
         <thead>
@@ -476,73 +462,34 @@
     </div>
 
     <p class="footer-note">
-      El reporte muestra solo los movimientos del día actual. Se reinicia
-      automáticamente cada 24 horas. Historial se limpia cada 31 días.
+      El reporte muestra los movimientos. Usa "Borrar historial" para limpiar todo cuando lo necesites.
     </p>
   </section>
 
   <script>
     const STORAGE_KEY = "yegni_maik_inventario_v1";
 
-    const state = {
-      movimientos: [],
-      fechaDia: "",
-      fechaInicio: ""
-    };
+    let movimientos = []; // Variable global para los movimientos
 
     function hoyISO() {
       const hoy = new Date();
       return hoy.toISOString().slice(0, 10);
     }
 
-    function diasEntre(fechainicio, fechaFin) {
-      const inicio = new Date(fechainicio);
-      const fin = new Date(fechaFin);
-      const diffTime = Math.abs(fin - inicio);
-      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    }
-
     function cargarDesdeStorage() {
       const raw = localStorage.getItem(STORAGE_KEY);
-      const hoy = hoyISO();
-      
       if (!raw) {
-        state.movimientos = [];
-        state.fechaDia = hoy;
-        state.fechaInicio = hoy;
+        movimientos = [];
         guardarEnStorage();
-        actualizarContadorDias();
         return;
       }
 
       try {
         const data = JSON.parse(raw);
-        state.fechaDia = data.fechaDia || hoy;
-        state.fechaInicio = data.fechaInicio || hoy;
-
-        // Verificar si pasaron 31 días desde el inicio
-        const diasPasados = diasEntre(state.fechaInicio, hoy);
-        
-        if (diasPasados >= 31) {
-          borrarSoloHistorialAuto();
-          return;
-        }
-
-        if (state.fechaDia !== hoy) {
-          // Solo reset diario
-          state.fechaDia = hoy;
-          guardarEnStorage();
-        } else {
-          state.movimientos = Array.isArray(data.movimientos) ? data.movimientos : [];
-        }
-        
-        actualizarContadorDias();
+        movimientos = Array.isArray(data.movimientos) ? data.movimientos : [];
       } catch (e) {
-        state.movimientos = [];
-        state.fechaDia = hoy;
-        state.fechaInicio = hoy;
+        movimientos = [];
         guardarEnStorage();
-        actualizarContadorDias();
       }
     }
 
@@ -550,17 +497,9 @@
       localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify({
-          fechaDia: state.fechaDia,
-          fechaInicio: state.fechaInicio,
-          movimientos: state.movimientos
+          movimientos: movimientos
         })
       );
-    }
-
-    function actualizarContadorDias() {
-      const dias = diasEntre(state.fechaInicio, hoyISO());
-      document.getElementById("contadorDias").textContent = 
-        `Días de uso: ${dias}/31`;
     }
 
     function formatearFechaHora(fecha) {
@@ -579,7 +518,7 @@
       const conteoIngresos = {};
       const conteoEgresos = {};
 
-      state.movimientos.forEach((m) => {
+      movimientos.forEach((m) => {
         const key = m.nombre.toLowerCase();
         if (!inventario[key]) {
           inventario[key] = {
@@ -673,7 +612,7 @@
       const tbody = document.getElementById("tablaReporte");
       tbody.innerHTML = "";
 
-      const movimientosOrdenados = [...state.movimientos].sort(
+      const movimientosOrdenados = [...movimientos].sort(
         (a, b) => new Date(b.fechaHora) - new Date(a.fechaHora)
       );
 
@@ -696,49 +635,16 @@
       });
     }
 
-    function borrarSoloHistorial(motivo = "MANUAL") {
-      if (!confirm(`¿Seguro que desea borrar TODO el historial de movimientos?
-
-El stock actual se recalculará como ajuste de sistema (${motivo}).`)) {
-        return false;
+    function borrarHistorial() {
+      if (!confirm("¿Seguro que desea BORRAR TODO el historial de movimientos? Esto eliminará TODOS los registros de ingresos y egresos.")) {
+        return;
       }
-
-      const { inventario } = construirInventario();
-      const nuevaFecha = new Date().toISOString();
-
-      const nuevosMovimientos = [];
-      Object.keys(inventario).forEach(key => {
-        const item = inventario[key];
-        if (item.stock > 0) {
-          nuevosMovimientos.push({
-            id: Date.now() + Math.random(),
-            tipo: "INGRESO",
-            nombre: item.nombre,
-            categoria: item.categoria,
-            cantidad: item.stock,
-            precioUnitario: item.ultimoPrecio || 0,
-            totalUSD: (item.ultimoPrecio || 0) * item.stock,
-            responsable: `AJUSTE SISTEMA ${motivo}`,
-            caracteristicas: `Ajuste de stock al ${motivo.toLowerCase()}`,
-            fechaHora: nuevaFecha
-          });
-        }
-      });
-
-      state.movimientos = nuevosMovimientos;
-      state.fechaDia = hoyISO();
-      if (motivo === "AUTO") {
-        state.fechaInicio = hoyISO(); // reinicia contador 31 días
-      }
+      
+      movimientos = [];
       guardarEnStorage();
-      actualizarContadorDias();
       renderInventario();
       renderReporte();
-      return true;
-    }
-
-    function borrarSoloHistorialAuto() {
-      borrarSoloHistorial("AUTO");
+      alert("✅ Historial borrado completamente");
     }
 
     function generarTextoReporte() {
@@ -746,8 +652,6 @@ El stock actual se recalculará como ajuste de sistema (${motivo}).`)) {
 
 ";
       texto += `Fecha: ${new Date().toLocaleDateString("es-VE")}
-`;
-      texto += `Días de uso del sistema: ${diasEntre(state.fechaInicio, hoyISO())}
 
 `;
       
@@ -756,7 +660,7 @@ El stock actual se recalculará como ajuste de sistema (${motivo}).`)) {
       texto += "-".repeat(50) + "
 ";
       
-      const ultimos = state.movimientos.slice(-20).reverse();
+      const ultimos = movimientos.slice(-20).reverse();
       ultimos.forEach(m => {
         texto += `${formatearFechaHora(m.fechaHora)} | ${m.tipo} | ${m.nombre} | Cant: ${m.cantidad} | USD: $${m.totalUSD.toFixed(2)} | ${m.responsable}
 `;
@@ -807,13 +711,11 @@ El stock actual se recalculará como ajuste de sistema (${motivo}).`)) {
         .value.trim();
 
       if (!nombre || !categoria || !cantidad || !responsable) {
-        alert("Complete todos los campos obligatorios");
+        alert("❌ Complete todos los campos obligatorios");
         return;
       }
 
-      let precioUnitario = parseFloat(
-        document.getElementById("precioUnitario").value
-      );
+      let precioUnitario;
       
       if (tipo === "EGRESO") {
         const { inventario } = construirInventario();
@@ -827,6 +729,9 @@ El stock actual se recalculará como ajuste de sistema (${motivo}).`)) {
         }
         precioUnitario = item.ultimoPrecio || 0;
       } else {
+        precioUnitario = parseFloat(
+          document.getElementById("precioUnitario").value
+        );
         if (isNaN(precioUnitario) || precioUnitario <= 0) {
           alert("❌ Ingrese precio unitario válido para ingresos");
           return;
@@ -848,18 +753,21 @@ El stock actual se recalculará como ajuste de sistema (${motivo}).`)) {
         fechaHora: new Date().toISOString(),
       };
 
-      state.movimientos.push(movimiento);
+      // AGREGAR AL ARRAY GLOBAL
+      movimientos.push(movimiento);
       guardarEnStorage();
+      
+      // REFRESCAR TABLAS
       renderInventario();
-      actualizarContadorDias();
 
+      // LIMPIAR FORMULARIO
       document.getElementById("formMovimiento").reset();
       document.getElementById("categoria").value = "";
       if (tipo === "INGRESO") {
         document.getElementById("precioUnitario").value = "";
       }
 
-      alert("✅ Movimiento registrado correctamente");
+      alert("✅ Movimiento registrado correctamente. Stock actualizado.");
     }
 
     function configurarTabs() {
@@ -878,7 +786,6 @@ El stock actual se recalculará como ajuste de sistema (${motivo}).`)) {
         btnGuardar.classList.add("btn-ingreso");
         precioInput.disabled = false;
         precioInput.placeholder = "Precio unitario (USD)";
-        precioInput.required = true;
       });
 
       tabEgreso.addEventListener("click", () => {
@@ -890,7 +797,7 @@ El stock actual se recalculará como ajuste de sistema (${motivo}).`)) {
         btnGuardar.classList.add("btn-egreso");
         precioInput.disabled = true;
         precioInput.placeholder = "Se usa el último precio registrado";
-        precioInput.required = false;
+        precioInput.value = "";
       });
     }
 
@@ -916,12 +823,13 @@ El stock actual se recalculará como ajuste de sistema (${motivo}).`)) {
       });
 
       document.getElementById("btnBorrarHistorial")
-        .addEventListener("click", () => borrarSoloHistorial("MANUAL"));
+        .addEventListener("click", borrarHistorial);
 
       document.getElementById("btnExportar")
         .addEventListener("click", exportarPorCorreo);
     }
 
+    // INICIALIZACIÓN
     document.addEventListener("DOMContentLoaded", () => {
       cargarDesdeStorage();
       configurarTabs();
