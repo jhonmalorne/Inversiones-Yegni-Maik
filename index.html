@@ -841,5 +841,65 @@
             if (e.target.id === 'modalBorrar') cerrarModal();
         };
     </script>
+    <!-- SUPABASE INTEGRACIÓN -->
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+  const supabaseUrl = 'https://qhermvfgpvhnhxelqiip.supabase.co'
+  const supabaseKey = 'TU_SUPABASE_ANON_KEY' // reemplaza esto por tu clave pública (anon)
+  const supabase = createClient(supabaseUrl, supabaseKey)
+
+  // Sincronizar INVENTARIO hacia Supabase
+  async function subirInventario() {
+    if (!inventario.length) return
+    await supabase.from('inventario').upsert(inventario, { onConflict: 'nombre' })
+  }
+
+  // Sincronizar HISTORIAL hacia Supabase
+  async function subirHistorial() {
+    if (!historial.length) return
+    await supabase.from('historial').upsert(historial.map(h => ({
+      ...h,
+      id: crypto.randomUUID(),
+    })))
+  }
+
+  // Descargar inventario desde Supabase
+  async function cargarInventario() {
+    const { data, error } = await supabase.from('inventario').select('*')
+    if (!error && data) {
+      inventario = data
+      guardarDatos()
+      actualizarTodo()
+    }
+  }
+
+  // Descargar historial desde Supabase
+  async function cargarHistorial() {
+    const { data, error } = await supabase.from('historial').select('*').order('fecha', { ascending: false })
+    if (!error && data) {
+      historial = data
+      guardarDatos()
+      actualizarHistorial()
+    }
+  }
+
+  // 🔄 Llamar sincronización manual extendida
+  async function sincronizarManual() {
+    actualizarStatus(true)
+    await subirInventario()
+    await subirHistorial()
+    await cargarInventario()
+    await cargarHistorial()
+    alert('✅ Sincronización completa con Supabase')
+  }
+
+  // Carga inicial (solo si hay conexión)
+  if (navigator.onLine) {
+    await cargarInventario()
+    await cargarHistorial()
+  }
+</script>
 </body>
 </html>
+
