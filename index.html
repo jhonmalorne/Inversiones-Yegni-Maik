@@ -507,140 +507,91 @@
         </div>
     </div>
 
-    <!-- LÓGICA APP + SUPABASE -->
-    <script type="module">
-        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+    <script>
+        // SISTEMA LOCALSTORAGE PERMANENTE
+        let inventario = JSON.parse(localStorage.getItem('inventarioYegni')) || [];
+        let historial = JSON.parse(localStorage.getItem('historialYegni')) || [];
+        let onlineStatus = navigator.onLine;
 
-        const supabaseUrl = 'https://qhermvfgpvhnhxelqiip.supabase.co'
-        const supabaseKey = 'TU_SUPABASE_ANON_KEY' // <-- pon aquí tu anon public key
-        const supabase = createClient(supabaseUrl, supabaseKey)
-
-        let inventario = []
-        let historial = []
-        let onlineStatus = navigator.onLine
-
+        // CATEGORÍAS PREDEFINIDAS
         const categorias = [
             'Aseo e Higiene', 'Juguetería', 'Bebidas Alcohólicas', 'Accesorios',
             'Papelería', 'Alimentos', 'Embutidos', 'Golosinas y Dulces',
             'Bazar', 'Utensilios Básicos', 'Productos para Bebé', 'Ferretería'
-        ]
+        ];
 
-        async function cargarDesdeLocal() {
-            inventario = JSON.parse(localStorage.getItem('inventarioYegni')) || []
-            historial = JSON.parse(localStorage.getItem('historialYegni')) || []
-        }
-
-        function guardarDatos() {
-            localStorage.setItem('inventarioYegni', JSON.stringify(inventario))
-            localStorage.setItem('historialYegni', JSON.stringify(historial))
-        }
-
-        async function cargarDesdeSupabase() {
-            if (!onlineStatus) return
-            const { data: invData } = await supabase.from('inventario').select('*')
-            if (invData) inventario = invData
-
-            const { data: histData } = await supabase
-                .from('historial')
-                .select('*')
-                .order('fecha', { ascending: false })
-
-            if (histData) historial = histData
-
-            guardarDatos()
-        }
-
-        async function subirInventario() {
-            if (!onlineStatus || !inventario.length) return
-            await supabase.from('inventario').upsert(inventario, { onConflict: 'nombre' })
-        }
-
-        async function subirHistorial() {
-            if (!onlineStatus || !historial.length) return
-            await supabase.from('historial').upsert(historial)
-        }
-
-        async function sincronizarManual() {
-            actualizarStatus(navigator.onLine)
-            if (!onlineStatus) {
-                alert('⚠️ No hay conexión. Solo se guarda en este dispositivo.')
-                guardarDatos()
-                actualizarTodo()
-                return
-            }
-            await subirInventario()
-            await subirHistorial()
-            await cargarDesdeSupabase()
-            actualizarTodo()
-            alert('✅ Sincronización completa con Supabase')
-        }
-
-        window.login = async function login() {
-            const user = document.getElementById('username').value
-            const pass = document.getElementById('password').value
-
+        // LOGIN SIMPLE
+        function login() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
             if (user === 'admin' && pass === '1234') {
-                document.getElementById('loginScreen').style.display = 'none'
-                document.getElementById('app').style.display = 'block'
-                await cargarDesdeLocal()
-                await cargarDesdeSupabase()
-                inicializarSistema()
-                actualizarStatus(navigator.onLine)
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                inicializarSistema();
+                actualizarStatus(true);
             } else {
-                alert('❌ Credenciales incorrectas')
+                alert('❌ Credenciales incorrectas');
             }
         }
 
-        window.logout = function logout() {
-            document.getElementById('app').style.display = 'none'
-            document.getElementById('loginScreen').style.display = 'flex'
-            document.getElementById('username').value = 'admin'
-            document.getElementById('password').value = ''
+        function logout() {
+            document.getElementById('app').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('username').value = 'admin';
+            document.getElementById('password').value = '';
         }
 
+        // INICIALIZAR
         function inicializarSistema() {
-            actualizarDashboard()
-            actualizarHistorial()
-            actualizarSelectProductos()
-            detectarConexion()
+            actualizarDashboard();
+            actualizarHistorial();
+            actualizarSelectProductos();
+            detectarConexion();
         }
 
-        window.showTab = function showTab(tab) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'))
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
-            document.getElementById(tab).classList.add('active')
-            event.target.classList.add('active')
-
-            if (tab === 'egreso') actualizarSelectProductos()
+        // PESTAÑAS
+        function showTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tab === 'egreso') actualizarSelectProductos();
         }
 
-        window.agregarIngreso = async function agregarIngreso() {
-            const producto = document.getElementById('productoIngreso').value.trim()
-            const categoria = document.getElementById('categoriaIngreso').value
-            const cantidad = parseInt(document.getElementById('cantidadIngreso').value)
-            const precio = parseFloat(document.getElementById('precioIngreso').value)
-            const responsable = document.getElementById('responsableIngreso').value.trim()
-            const caracteristicas = document.getElementById('caracteristicasIngreso').value.trim()
+        // GUARDAR DATOS
+        function guardarDatos() {
+            localStorage.setItem('inventarioYegni', JSON.stringify(inventario));
+            localStorage.setItem('historialYegni', JSON.stringify(historial));
+        }
+
+        // INGRESO
+        function agregarIngreso() {
+            const producto = document.getElementById('productoIngreso').value.trim();
+            const categoria = document.getElementById('categoriaIngreso').value;
+            const cantidad = parseInt(document.getElementById('cantidadIngreso').value);
+            const precio = parseFloat(document.getElementById('precioIngreso').value);
+            const responsable = document.getElementById('responsableIngreso').value.trim();
+            const caracteristicas = document.getElementById('caracteristicasIngreso').value.trim();
 
             if (!producto || !categoria || !cantidad || !precio || !responsable) {
-                alert('❌ Completa todos los campos obligatorios')
-                return
+                alert('❌ Completa todos los campos obligatorios');
+                return;
             }
 
             if (cantidad < 1 || precio < 0) {
-                alert('❌ Cantidad > 0 y Precio válido')
-                return
+                alert('❌ Cantidad > 0 y Precio válido');
+                return;
             }
 
-            const fechaHora = new Date().toISOString()
-            const productoExistente = inventario.find(
-                p => p.nombre.toLowerCase() === producto.toLowerCase()
-            )
+            const fechaHora = new Date().toLocaleString('es-VE');
+            const productoExistente = inventario.find(p => p.nombre.toLowerCase() === producto.toLowerCase());
 
             if (productoExistente) {
-                productoExistente.stock += cantidad
-                productoExistente.ingresos += cantidad
-                productoExistente.ultimoPrecio = precio
+                productoExistente.stock += cantidad;
+                productoExistente.ingresos += cantidad;
+                productoExistente.ultimoPrecio = precio;
             } else {
                 inventario.push({
                     nombre: producto,
@@ -651,9 +602,10 @@
                     egresos: 0,
                     caracteristicas: caracteristicas || '',
                     ultimoPrecio: precio
-                })
+                });
             }
 
+            // Agregar al historial
             historial.unshift({
                 fecha: fechaHora,
                 tipo: 'INGRESO',
@@ -662,42 +614,38 @@
                 cantidad,
                 precio: precio * cantidad,
                 responsable
-            })
+            });
 
-            guardarDatos()
-            await subirInventario()
-            await subirHistorial()
-            actualizarTodo()
-            limpiarFormularioIngreso()
-            alert('✅ Ingreso registrado correctamente')
+            guardarDatos();
+            actualizarTodo();
+            limpiarFormularioIngreso();
+            alert('✅ Ingreso registrado correctamente');
         }
 
-        window.registrarEgreso = async function registrarEgreso() {
-            const nombre = document.getElementById('productoEgreso').value
-            const cantidad = parseInt(document.getElementById('cantidadEgreso').value)
-            const responsable = document.getElementById('responsableEgreso').value.trim()
+        // EGRESO
+        function registrarEgreso() {
+            const nombre = document.getElementById('productoEgreso').value;
+            const cantidad = parseInt(document.getElementById('cantidadEgreso').value);
+            const responsable = document.getElementById('responsableEgreso').value.trim();
 
             if (!nombre || !cantidad || !responsable) {
-                alert('❌ Completa todos los campos')
-                return
+                alert('❌ Completa todos los campos');
+                return;
             }
 
-            const producto = inventario.find(p => p.nombre === nombre)
-            if (!producto) {
-                alert('❌ Producto no encontrado')
-                return
-            }
+            const producto = inventario.find(p => p.nombre === nombre);
+            if (!producto) return alert('❌ Producto no encontrado');
 
             if (producto.stock < cantidad) {
-                alert(`❌ Stock insuficiente. Disponible: ${producto.stock}`)
-                return
+                alert(`❌ Stock insuficiente. Disponible: ${producto.stock}`);
+                return;
             }
 
-            const precioTotal = (producto.ultimoPrecio || producto.precio) * cantidad
-            const fechaHora = new Date().toISOString()
+            const precioTotal = (producto.ultimoPrecio || producto.precio) * cantidad;
+            const fechaHora = new Date().toLocaleString('es-VE');
 
-            producto.stock -= cantidad
-            producto.egresos += cantidad
+            producto.stock -= cantidad;
+            producto.egresos += cantidad;
 
             historial.unshift({
                 fecha: fechaHora,
@@ -707,84 +655,78 @@
                 cantidad,
                 precio: precioTotal,
                 responsable
-            })
+            });
 
-            guardarDatos()
-            await subirInventario()
-            await subirHistorial()
-            actualizarTodo()
-            limpiarFormularioEgreso()
-            alert('✅ Egreso registrado correctamente')
+            guardarDatos();
+            actualizarTodo();
+            limpiarFormularioEgreso();
+            alert('✅ Egreso registrado correctamente');
         }
 
+        // ACTUALIZACIONES
         function actualizarTodo() {
-            actualizarDashboard()
-            actualizarHistorial()
-            actualizarSelectProductos()
+            actualizarDashboard();
+            actualizarHistorial();
+            actualizarSelectProductos();
         }
 
         function actualizarDashboard() {
-            const totalP = inventario.length
-            const totalS = inventario.reduce((sum, p) => sum + (p.stock || 0), 0)
-            const lowS = inventario.filter(p => p.stock > 0 && p.stock < 10).length
+            const totalP = inventario.length;
+            const totalS = inventario.reduce((sum, p) => sum + p.stock, 0);
+            const lowS = inventario.filter(p => p.stock > 0 && p.stock < 10).length;
+            const hoy = new Date().toDateString();
+            const hoyM = historial.filter(m => new Date(m.fecha).toDateString() === hoy).length;
 
-            const hoyStr = new Date().toDateString()
-            const hoyM = historial.filter(m => {
-                const d = new Date(m.fecha)
-                return d.toDateString() === hoyStr
-            }).length
+            document.getElementById('totalProducts').textContent = totalP;
+            document.getElementById('totalStock').textContent = totalS.toLocaleString();
+            document.getElementById('lowStock').textContent = lowS;
+            document.getElementById('todayMoves').textContent = hoyM;
 
-            document.getElementById('totalProducts').textContent = totalP
-            document.getElementById('totalStock').textContent = totalS.toLocaleString()
-            document.getElementById('lowStock').textContent = lowS
-            document.getElementById('todayMoves').textContent = hoyM
-
-            const tbody = document.getElementById('inventoryBody')
+            const tbody = document.getElementById('inventoryBody');
             tbody.innerHTML = inventario.map(p => {
-                const esBajo = p.stock > 0 && p.stock < 10
+                const esBajo = p.stock > 0 && p.stock < 10;
                 return `
                     <tr ${esBajo ? 'class="low-stock"' : ''}>
                         <td><strong>${p.nombre}</strong></td>
                         <td>${p.categoria}</td>
                         <td style="font-weight: 700; font-size: 1.2rem; color: ${p.stock === 0 ? 'var(--danger)' : 'var(--primary)'}">${p.stock}</td>
-                        <td>$${(p.ultimoPrecio ?? p.precio ?? 0).toFixed(2)}</td>
+                        <td>$${p.ultimoPrecio?.toFixed(2) || p.precio?.toFixed(2) || '0.00'}</td>
                         <td>${p.ingresos || 0}</td>
                         <td>${p.egresos || 0}</td>
                         <td>${p.caracteristicas || '-'}</td>
                     </tr>
-                `
-            }).join('')
+                `;
+            }).join('');
         }
 
         function actualizarSelectProductos() {
-            const select = document.getElementById('productoEgreso')
-            select.innerHTML = '<option value="">Selecciona un producto...</option>'
+            const select = document.getElementById('productoEgreso');
+            select.innerHTML = '<option value="">Selecciona un producto...</option>';
             inventario.forEach(p => {
-                const option = new Option(`${p.nombre} (${p.stock} un)`, p.nombre)
-                select.appendChild(option)
-            })
+                const option = new Option(`${p.nombre} (${p.stock} un)`, p.nombre);
+                select.appendChild(option);
+            });
         }
 
-        window.cargarDatosProducto = function cargarDatosProducto() {
-            const nombre = document.getElementById('productoEgreso').value
-            const producto = inventario.find(p => p.nombre === nombre)
-
+        function cargarDatosProducto() {
+            const nombre = document.getElementById('productoEgreso').value;
+            const producto = inventario.find(p => p.nombre === nombre);
+            
             if (producto) {
-                document.getElementById('categoriaEgreso').value = producto.categoria
-                document.getElementById('stockActual').value = producto.stock
-                document.getElementById('precioEgreso').value = (producto.ultimoPrecio || producto.precio || 0) * 1
-                document.getElementById('cantidadEgreso').max = producto.stock
+                document.getElementById('categoriaEgreso').value = producto.categoria;
+                document.getElementById('stockActual').value = producto.stock;
+                document.getElementById('precioEgreso').value = (producto.ultimoPrecio || producto.precio || 0) * 1;
+                document.getElementById('cantidadEgreso').max = producto.stock;
             }
         }
 
         function actualizarHistorial() {
-            const tbody = document.getElementById('historialBody')
+            const tbody = document.getElementById('historialBody');
             tbody.innerHTML = historial.slice(0, 100).map(m => {
-                const color = m.tipo === 'INGRESO' ? 'var(--accent)' : 'var(--danger)'
-                const fechaLocal = new Date(m.fecha).toLocaleString('es-VE')
+                const color = m.tipo === 'INGRESO' ? 'var(--accent)' : 'var(--danger)';
                 return `
                     <tr>
-                        <td>${fechaLocal}</td>
+                        <td>${m.fecha}</td>
                         <td style="color: ${color}; font-weight: 700;">${m.tipo}</td>
                         <td>${m.producto}</td>
                         <td>${m.categoria}</td>
@@ -792,112 +734,112 @@
                         <td>$${m.precio.toFixed(2)}</td>
                         <td>${m.responsable}</td>
                     </tr>
-                `
-            }).join('')
+                `;
+            }).join('');
         }
 
-        window.filterProducts = function filterProducts() {
-            const filtro = document.getElementById('searchInput').value.toLowerCase()
+        // FILTROS
+        function filterProducts() {
+            const filtro = document.getElementById('searchInput').value.toLowerCase();
             document.querySelectorAll('#inventoryBody tr').forEach(row => {
-                const nombre = row.cells[0].textContent.toLowerCase()
-                row.style.display = nombre.includes(filtro) ? '' : 'none'
-            })
+                const nombre = row.cells[0].textContent.toLowerCase();
+                row.style.display = nombre.includes(filtro) ? '' : 'none';
+            });
         }
 
-        window.filtrarHoy = function filtrarHoy() {
-            const hoy = new Date().toDateString()
-            const rows = document.querySelectorAll('#historialBody tr')
-            rows.forEach((row, i) => {
-                const item = historial[i]
-                if (!item) return
-                const fecha = new Date(item.fecha).toDateString()
-                row.style.display = fecha === hoy ? '' : 'none'
-            })
+        function filtrarHoy() {
+            const hoy = new Date().toDateString();
+            document.querySelectorAll('#historialBody tr').forEach((row, i) => {
+                const fecha = new Date(historial[i]?.fecha).toDateString();
+                row.style.display = fecha === hoy ? '' : 'none';
+            });
         }
 
-        window.exportarExcel = function exportarExcel() {
-            let csv = 'Fecha,Tipo,Producto,Categoría,Cantidad,Precio,Responsable
-'
+        // EXPORTAR
+        function exportarExcel() {
+            let csv = 'Fecha,Tipo,Producto,Categoría,Cantidad,Precio,Responsable\n';
             historial.slice(0, 1000).forEach(m => {
-                const fechaLocal = new Date(m.fecha).toLocaleString('es-VE')
-                csv += `"${fechaLocal}","${m.tipo}","${m.producto}","${m.categoria}",${m.cantidad},${m.precio},"${m.responsable}"
-`
-            })
-
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.href = url
-            a.download = `Inventario_YegniMaik_${new Date().toISOString().split('T')[0]}.csv`
-            a.click()
+                csv += `"${m.fecha}","${m.tipo}","${m.producto}","${m.categoria}",${m.cantidad},${m.precio},"${m.responsable}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Inventario_YegniMaik_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
         }
 
-        window.mostrarBorrarHistorial = function mostrarBorrarHistorial() {
-            document.getElementById('modalBorrar').style.display = 'block'
+        // MODAL BORRAR
+        function mostrarBorrarHistorial() {
+            document.getElementById('modalBorrar').style.display = 'block';
         }
 
-        window.cerrarModal = function cerrarModal() {
-            document.getElementById('modalBorrar').style.display = 'none'
+        function cerrarModal() {
+            document.getElementById('modalBorrar').style.display = 'none';
         }
 
-        window.confirmarBorrarHistorial = async function confirmarBorrarHistorial() {
+        function confirmarBorrarHistorial() {
             if (confirm('¿BORRAR TODO el historial?')) {
-                historial = []
-                guardarDatos()
-                actualizarHistorial()
-                cerrarModal()
-                if (onlineStatus) {
-                    await supabase.from('historial').delete().neq('id', null)
-                }
-                alert('✅ Historial eliminado')
+                historial = [];
+                guardarDatos();
+                actualizarHistorial();
+                cerrarModal();
+                alert('✅ Historial eliminado');
             }
         }
 
+        // CONEXIÓN
         function detectarConexion() {
-            window.addEventListener('online', () => actualizarStatus(true))
-            window.addEventListener('offline', () => actualizarStatus(false))
+            window.addEventListener('online', () => actualizarStatus(true));
+            window.addEventListener('offline', () => actualizarStatus(false));
         }
 
         function actualizarStatus(online) {
-            onlineStatus = online
-            const status = document.getElementById('status')
+            onlineStatus = online;
+            const status = document.getElementById('status');
             if (online) {
-                status.textContent = '🟢 Sistema Activo'
-                status.className = 'status online'
+                status.textContent = '🟢 Sistema Activo';
+                status.className = 'status online';
             } else {
-                status.textContent = '🔴 Sin Conexión'
-                status.className = 'status offline'
+                status.textContent = '🔴 Sin Conexión';
+                status.className = 'status offline';
             }
         }
 
+        function sincronizarManual() {
+            guardarDatos();
+            actualizarTodo();
+            alert('✅ Datos sincronizados');
+        }
+
+        // LIMPIAR FORMULARIOS
         function limpiarFormularioIngreso() {
-            document.getElementById('productoIngreso').value = ''
-            document.getElementById('categoriaIngreso').value = ''
-            document.getElementById('cantidadIngreso').value = ''
-            document.getElementById('precioIngreso').value = ''
-            document.getElementById('responsableIngreso').value = ''
-            document.getElementById('caracteristicasIngreso').value = ''
+            document.getElementById('productoIngreso').value = '';
+            document.getElementById('categoriaIngreso').value = '';
+            document.getElementById('cantidadIngreso').value = '';
+            document.getElementById('precioIngreso').value = '';
+            document.getElementById('responsableIngreso').value = '';
+            document.getElementById('caracteristicasIngreso').value = '';
         }
 
         function limpiarFormularioEgreso() {
-            document.getElementById('cantidadEgreso').value = ''
-            document.getElementById('responsableEgreso').value = ''
-            document.getElementById('precioEgreso').value = ''
+            document.getElementById('cantidadEgreso').value = '';
+            document.getElementById('responsableEgreso').value = '';
+            document.getElementById('precioEgreso').value = '';
         }
 
+        // EVENTOS TECLADO
         document.addEventListener('keypress', e => {
             if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
-                login()
+                login();
             }
-        })
+        });
 
+        // CIERRE MODAL
         window.onclick = e => {
-            if (e.target.id === 'modalBorrar') cerrarModal()
-        }
-
-        ;(async () => {
-            await cargarDesdeLocal()
-        })()
+            if (e.target.id === 'modalBorrar') cerrarModal();
+        };
     </script>
 </body>
 </html>
