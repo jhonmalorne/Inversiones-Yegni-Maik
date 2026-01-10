@@ -153,6 +153,10 @@
       background: var(--naranja);
     }
 
+    .btn-borrar {
+      background: var(--rojo);
+    }
+
     .btn:hover {
       opacity: 0.9;
     }
@@ -190,6 +194,13 @@
 
     .search-row select {
       min-width: 120px;
+    }
+
+    .search-row .btn {
+      flex: none;
+      width: auto;
+      padding: 8px 12px;
+      font-size: 12px;
     }
 
     table {
@@ -250,6 +261,16 @@
       color: #777;
     }
 
+    .contador-dias {
+      background: var(--amarillo);
+      color: var(--azul-oscuro);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
     @media (max-width: 600px) {
       header h1 {
         font-size: 16px;
@@ -263,7 +284,10 @@
       td:nth-child(6),
       th:nth-child(7),
       td:nth-child(7) {
-        display: none; /* simplifica vista en móvil */
+        display: none;
+      }
+      .search-row {
+        flex-direction: column;
       }
     }
   </style>
@@ -421,7 +445,18 @@
   <!-- Reporte diario -->
   <section class="card">
     <h2>Reporte diario</h2>
-    <button class="btn btn-egreso" id="btnReporte">Ver reporte de hoy</button>
+    
+    <div class="search-row">
+      <button class="btn btn-egreso" id="btnReporte">Ver reporte de hoy</button>
+      <button class="btn btn-borrar" id="btnBorrarHistorial">Borrar historial</button>
+      <button class="btn" style="background:#0056a8;color:#fff" id="btnExportar">
+        Exportar por correo
+      </button>
+    </div>
+
+    <div class="contador-dias" id="contadorDias">
+      Cargando contador de días...
+    </div>
 
     <div class="table-wrapper" id="reporteWrapper" style="display: none">
       <table>
@@ -441,8 +476,8 @@
     </div>
 
     <p class="footer-note">
-      El reporte muestra solo los movimientos del día actual y se reinicia
-      automáticamente al cambiar de fecha (después de las 24 horas).
+      El reporte muestra solo los movimientos del día actual. Se reinicia
+      automáticamente cada 24 horas. Historial se limpia cada 31 días.
     </p>
   </section>
 
@@ -452,6 +487,7 @@
     const state = {
       movimientos: [],
       fechaDia: "",
+      fechaInicio: ""
     };
 
     function hoyISO() {
@@ -459,34 +495,54 @@
       return hoy.toISOString().slice(0, 10);
     }
 
+    function diasEntre(fechainicio, fechaFin) {
+      const inicio = new Date(fechainicio);
+      const fin = new Date(fechaFin);
+      const diffTime = Math.abs(fin - inicio);
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
     function cargarDesdeStorage() {
       const raw = localStorage.getItem(STORAGE_KEY);
       const hoy = hoyISO();
+      
       if (!raw) {
         state.movimientos = [];
         state.fechaDia = hoy;
+        state.fechaInicio = hoy;
         guardarEnStorage();
+        actualizarContadorDias();
         return;
       }
 
       try {
         const data = JSON.parse(raw);
         state.fechaDia = data.fechaDia || hoy;
+        state.fechaInicio = data.fechaInicio || hoy;
+
+        // Verificar si pasaron 31 días desde el inicio
+        const diasPasados = diasEntre(state.fechaInicio, hoy);
+        
+        if (diasPasados >= 31) {
+          borrarSoloHistorialAuto();
+          return;
+        }
 
         if (state.fechaDia !== hoy) {
-          // nueva fecha: borrar movimientos del día anterior
-          state.movimientos = [];
+          // Solo reset diario
           state.fechaDia = hoy;
           guardarEnStorage();
         } else {
-          state.movimientos = Array.isArray(data.movimientos)
-            ? data.movimientos
-            : [];
+          state.movimientos = Array.isArray(data.movimientos) ? data.movimientos : [];
         }
+        
+        actualizarContadorDias();
       } catch (e) {
         state.movimientos = [];
         state.fechaDia = hoy;
+        state.fechaInicio = hoy;
         guardarEnStorage();
+        actualizarContadorDias();
       }
     }
 
@@ -495,9 +551,16 @@
         STORAGE_KEY,
         JSON.stringify({
           fechaDia: state.fechaDia,
-          movimientos: state.movimientos,
+          fechaInicio: state.fechaInicio,
+          movimientos: state.movimientos
         })
       );
+    }
+
+    function actualizarContadorDias() {
+      const dias = diasEntre(state.fechaInicio, hoyISO());
+      document.getElementById("contadorDias").textContent = 
+        `Días de uso: ${dias}/31`;
     }
 
     function formatearFechaHora(fecha) {
@@ -595,9 +658,7 @@
           tr.innerHTML = `
             <td>${item.nombre}</td>
             <td>${item.categoria}</td>
-            <td class="${esCritico ? "stock-critico" : ""}">${
-            item.stock
-          }</td>
+            <td class="${esCritico ? "stock-critico" : ""}">${item.stock}</td>
             <td>${estadoHTML}</td>
             <td>${conteoIngresos[key] || 0}</td>
             <td>${conteoEgresos[key] || 0}</td>
@@ -635,6 +696,96 @@
       });
     }
 
+    function borrarSoloHistorial(motivo = "MANUAL") {
+      if (!confirm(`¿Seguro que desea borrar TODO el historial de movimientos?
+
+El stock actual se recalculará como ajuste de sistema (${motivo}).`)) {
+        return false;
+      }
+
+      const { inventario } = construirInventario();
+      const nuevaFecha = new Date().toISOString();
+
+      const nuevosMovimientos = [];
+      Object.keys(inventario).forEach(key => {
+        const item = inventario[key];
+        if (item.stock > 0) {
+          nuevosMovimientos.push({
+            id: Date.now() + Math.random(),
+            tipo: "INGRESO",
+            nombre: item.nombre,
+            categoria: item.categoria,
+            cantidad: item.stock,
+            precioUnitario: item.ultimoPrecio || 0,
+            totalUSD: (item.ultimoPrecio || 0) * item.stock,
+            responsable: `AJUSTE SISTEMA ${motivo}`,
+            caracteristicas: `Ajuste de stock al ${motivo.toLowerCase()}`,
+            fechaHora: nuevaFecha
+          });
+        }
+      });
+
+      state.movimientos = nuevosMovimientos;
+      state.fechaDia = hoyISO();
+      if (motivo === "AUTO") {
+        state.fechaInicio = hoyISO(); // reinicia contador 31 días
+      }
+      guardarEnStorage();
+      actualizarContadorDias();
+      renderInventario();
+      renderReporte();
+      return true;
+    }
+
+    function borrarSoloHistorialAuto() {
+      borrarSoloHistorial("AUTO");
+    }
+
+    function generarTextoReporte() {
+      let texto = "=== REPORTE DE INVENTARIO YEGNI-MAIK ===
+
+";
+      texto += `Fecha: ${new Date().toLocaleDateString("es-VE")}
+`;
+      texto += `Días de uso del sistema: ${diasEntre(state.fechaInicio, hoyISO())}
+
+`;
+      
+      texto += "ÚLTIMOS MOVIMIENTOS:
+";
+      texto += "-".repeat(50) + "
+";
+      
+      const ultimos = state.movimientos.slice(-20).reverse();
+      ultimos.forEach(m => {
+        texto += `${formatearFechaHora(m.fechaHora)} | ${m.tipo} | ${m.nombre} | Cant: ${m.cantidad} | USD: $${m.totalUSD.toFixed(2)} | ${m.responsable}
+`;
+      });
+      
+      texto += "
+" + "-".repeat(50) + "
+";
+      texto += "INVENTARIO ACTUAL:
+";
+      
+      const { inventario } = construirInventario();
+      Object.keys(inventario).sort().forEach(key => {
+        const item = inventario[key];
+        texto += `${item.nombre}: ${item.stock} und (${item.categoria})
+`;
+      });
+      
+      return texto;
+    }
+
+    function exportarPorCorreo() {
+      const email = "jhoncuenta2@gmail.com";
+      const subject = `Reporte Inventario Yegni-Maik ${hoyISO()}`;
+      const body = generarTextoReporte();
+      const link = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = link;
+    }
+
     function registrarMovimiento(e) {
       e.preventDefault();
 
@@ -655,24 +806,31 @@
         .getElementById("caracteristicas")
         .value.trim();
 
-      if (!nombre || !categoria || !cantidad || !responsable) return;
+      if (!nombre || !categoria || !cantidad || !responsable) {
+        alert("Complete todos los campos obligatorios");
+        return;
+      }
 
       let precioUnitario = parseFloat(
         document.getElementById("precioUnitario").value
       );
+      
       if (tipo === "EGRESO") {
         const { inventario } = construirInventario();
         const key = nombre.toLowerCase();
         const item = inventario[key];
         if (!item || item.stock < cantidad) {
           alert(
-            "No hay stock suficiente o el producto no tiene ingresos registrados."
+            "❌ No hay stock suficiente o el producto no tiene ingresos registrados."
           );
           return;
         }
         precioUnitario = item.ultimoPrecio || 0;
       } else {
-        if (isNaN(precioUnitario)) precioUnitario = 0;
+        if (isNaN(precioUnitario) || precioUnitario <= 0) {
+          alert("❌ Ingrese precio unitario válido para ingresos");
+          return;
+        }
       }
 
       const totalUSD = precioUnitario * cantidad;
@@ -693,12 +851,15 @@
       state.movimientos.push(movimiento);
       guardarEnStorage();
       renderInventario();
+      actualizarContadorDias();
 
       document.getElementById("formMovimiento").reset();
       document.getElementById("categoria").value = "";
       if (tipo === "INGRESO") {
         document.getElementById("precioUnitario").value = "";
       }
+
+      alert("✅ Movimiento registrado correctamente");
     }
 
     function configurarTabs() {
@@ -717,6 +878,7 @@
         btnGuardar.classList.add("btn-ingreso");
         precioInput.disabled = false;
         precioInput.placeholder = "Precio unitario (USD)";
+        precioInput.required = true;
       });
 
       tabEgreso.addEventListener("click", () => {
@@ -727,8 +889,8 @@
         btnGuardar.classList.remove("btn-ingreso");
         btnGuardar.classList.add("btn-egreso");
         precioInput.disabled = true;
-        precioInput.placeholder =
-          "Se usa el último precio registrado";
+        precioInput.placeholder = "Se usa el último precio registrado";
+        precioInput.required = false;
       });
     }
 
@@ -744,6 +906,7 @@
     function configurarReporte() {
       const btnReporte = document.getElementById("btnReporte");
       const wrapper = document.getElementById("reporteWrapper");
+      
       btnReporte.addEventListener("click", () => {
         const visible = wrapper.style.display === "block";
         wrapper.style.display = visible ? "none" : "block";
@@ -751,6 +914,12 @@
           renderReporte();
         }
       });
+
+      document.getElementById("btnBorrarHistorial")
+        .addEventListener("click", () => borrarSoloHistorial("MANUAL"));
+
+      document.getElementById("btnExportar")
+        .addEventListener("click", exportarPorCorreo);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
